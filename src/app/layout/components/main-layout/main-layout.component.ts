@@ -80,7 +80,7 @@ interface NavGroup {
               @if (!sidebarCollapsed()) {
                 <li class="nav-group-label" (click)="toggleGroup(group.label)">
                   <span>{{ group.label }}</span>
-                  <i [class]="'pi ' + (isGroupCollapsed(group.label) ? 'pi-chevron-right' : 'pi-chevron-down')"></i>
+                  <i [class]="'pi ' + (isGroupCollapsed(group.label) ? 'pi-plus' : 'pi-minus')"></i>
                 </li>
               } @else {
                 <li class="nav-group-divider"></li>
