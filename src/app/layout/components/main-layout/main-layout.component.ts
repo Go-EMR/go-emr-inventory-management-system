@@ -78,32 +78,37 @@ interface NavGroup {
           <ul class="nav-list">
             @for (group of navGroups; track group.label) {
               @if (!sidebarCollapsed()) {
-                <li class="nav-group-label">{{ group.label }}</li>
+                <li class="nav-group-label" (click)="toggleGroup(group.label)">
+                  <span>{{ group.label }}</span>
+                  <i [class]="'pi ' + (isGroupCollapsed(group.label) ? 'pi-chevron-right' : 'pi-chevron-down')"></i>
+                </li>
               } @else {
                 <li class="nav-group-divider"></li>
               }
-              @for (item of group.items; track item.route) {
-                <li class="nav-item">
-                  <a
-                    [routerLink]="item.route"
-                    routerLinkActive="active"
-                    [routerLinkActiveOptions]="{ exact: item.route === '/dashboard' || item.route === '/vendors' }"
-                    class="nav-link"
-                    [pTooltip]="sidebarCollapsed() ? item.label : ''"
-                    tooltipPosition="right"
-                    pRipple
-                  >
-                    <span class="nav-icon">
-                      <i [class]="'pi ' + item.icon"></i>
-                      @if (item.badge && item.badge > 0) {
-                        <span class="nav-badge">{{ item.badge > 9 ? '9+' : item.badge }}</span>
+              @if (!isGroupCollapsed(group.label) || sidebarCollapsed()) {
+                @for (item of group.items; track item.route) {
+                  <li class="nav-item">
+                    <a
+                      [routerLink]="item.route"
+                      routerLinkActive="active"
+                      [routerLinkActiveOptions]="{ exact: item.route === '/dashboard' || item.route === '/vendors' }"
+                      class="nav-link"
+                      [pTooltip]="sidebarCollapsed() ? item.label : ''"
+                      tooltipPosition="right"
+                      pRipple
+                    >
+                      <span class="nav-icon">
+                        <i [class]="'pi ' + item.icon"></i>
+                        @if (item.badge && item.badge > 0) {
+                          <span class="nav-badge">{{ item.badge > 9 ? '9+' : item.badge }}</span>
+                        }
+                      </span>
+                      @if (!sidebarCollapsed()) {
+                        <span class="nav-label">{{ item.label }}</span>
                       }
-                    </span>
-                    @if (!sidebarCollapsed()) {
-                      <span class="nav-label">{{ item.label }}</span>
-                    }
-                  </a>
-                </li>
+                    </a>
+                  </li>
+                }
               }
             }
           </ul>
@@ -337,6 +342,9 @@ interface NavGroup {
     }
 
     .nav-group-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       font-size: 0.6875rem;
       font-weight: 600;
       text-transform: uppercase;
@@ -344,6 +352,17 @@ interface NavGroup {
       color: var(--text-tertiary, #9ca3af);
       padding: 1rem 1rem 0.375rem;
       margin-top: 0.25rem;
+      cursor: pointer;
+      user-select: none;
+
+      i {
+        font-size: 0.625rem;
+        transition: transform var(--transition-fast);
+      }
+
+      &:hover {
+        color: var(--text-secondary);
+      }
     }
 
     .nav-group-label:first-child {
@@ -736,6 +755,7 @@ export class MainLayoutComponent {
 
   sidebarCollapsed = signal(false);
   mobileSidebarOpen = signal(false);
+  collapsedGroups = signal<Set<string>>(new Set());
 
   navGroups: NavGroup[] = [
     {
@@ -832,6 +852,18 @@ export class MainLayoutComponent {
 
   toggleMobileSidebar(): void {
     this.mobileSidebarOpen.update(v => !v);
+  }
+
+  toggleGroup(label: string): void {
+    this.collapsedGroups.update(set => {
+      const next = new Set(set);
+      next.has(label) ? next.delete(label) : next.add(label);
+      return next;
+    });
+  }
+
+  isGroupCollapsed(label: string): boolean {
+    return this.collapsedGroups().has(label);
   }
 
   toggleTheme(): void {

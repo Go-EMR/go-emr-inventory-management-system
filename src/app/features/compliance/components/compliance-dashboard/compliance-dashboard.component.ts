@@ -1174,29 +1174,6 @@ import {
       font-weight: 500;
     }
 
-    /* Tabs */
-    :host ::ng-deep .p-tabs {
-      background: var(--surface-card);
-      border-radius: var(--radius-xl);
-      border: 1px solid var(--border-color);
-      overflow: hidden;
-    }
-
-    :host ::ng-deep .p-tablist {
-      background: var(--surface-section);
-      border-bottom: 1px solid var(--border-color);
-    }
-
-    :host ::ng-deep .p-tab {
-      display: flex;
-      align-items: center;
-      gap: var(--space-2);
-    }
-
-    :host ::ng-deep .p-tabpanels {
-      padding: var(--space-6);
-    }
-
     /* Overview Grid */
     .overview-grid {
       display: grid;

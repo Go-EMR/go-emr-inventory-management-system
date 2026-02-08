@@ -652,36 +652,6 @@ import {
       color: var(--alert-600);
     }
 
-    /* Tabs */
-    :host ::ng-deep .p-tablist {
-      background: var(--surface-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-xl);
-      padding: var(--space-2);
-    }
-
-    :host ::ng-deep .p-tab {
-      display: flex;
-      align-items: center;
-      gap: var(--space-2);
-      padding: var(--space-3) var(--space-4);
-      border-radius: var(--radius-lg);
-      font-weight: 500;
-    }
-
-    :host ::ng-deep .p-tab-active {
-      background: var(--primary-50);
-      color: var(--primary-600);
-    }
-
-    :host-context([data-theme="dark"]) ::ng-deep .p-tab-active {
-      background: rgba(16, 185, 129, 0.15);
-    }
-
-    :host ::ng-deep .p-tabpanels {
-      padding: var(--space-5) 0 0 0;
-    }
-
     /* Charts Grid */
     .charts-grid {
       display: grid;
