@@ -259,7 +259,7 @@ import {
                 <div class="performers-list">
                   @for (vendor of summary()?.needsAttention || []; track vendor.supplierId) {
                     <div class="performer-item at-risk">
-                      <i class="pi pi-exclamation-triangle" style="color: var(--red-500); flex-shrink: 0;"></i>
+                      <i class="pi pi-exclamation-triangle" style="color: var(--alert-500); flex-shrink: 0;"></i>
                       <div class="performer-info">
                         <span class="name">{{ vendor.supplierName }}</span>
                         <div class="alerts">
@@ -455,7 +455,7 @@ import {
     }
 
     .tier-card.selected {
-      border-color: var(--primary-color);
+      border-color: var(--primary-500);
     }
 
     .tier-badge {
@@ -483,14 +483,14 @@ import {
 
     .tier-label {
       font-size: 0.6875rem;
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
       text-transform: uppercase;
       letter-spacing: 0.02em;
     }
 
     .kpi-divider {
       width: 1px;
-      background: var(--surface-border);
+      background: var(--border-color);
       margin: 0 0.25rem;
       flex-shrink: 0;
     }
@@ -507,12 +507,12 @@ import {
     }
 
     .kpi-card.has-issues {
-      border-left: 3px solid var(--red-500);
+      border-left: 3px solid var(--alert-500);
     }
 
     .kpi-label {
       font-size: 0.6875rem;
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
       display: flex;
       align-items: center;
       gap: 0.25rem;
@@ -568,7 +568,7 @@ import {
 
     .vendor-meta {
       font-size: 0.6875rem;
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
     }
 
     .score-cell {
@@ -592,7 +592,7 @@ import {
     }
 
     .metric-value.low {
-      color: var(--red-600);
+      color: var(--alert-600);
     }
 
     .trend {
@@ -603,7 +603,7 @@ import {
     }
 
     .trend.positive { color: var(--green-600); }
-    .trend.negative { color: var(--red-600); }
+    .trend.negative { color: var(--alert-600); }
 
     .action-buttons {
       display: flex;
@@ -611,11 +611,11 @@ import {
     }
 
     tr.at-risk {
-      background: var(--red-50);
+      background: var(--alert-50);
     }
 
     tr.has-issues td:first-child {
-      border-left: 3px solid var(--orange-500);
+      border-left: 3px solid var(--warning-500);
     }
 
     /* ===== BOTTOM GRID: chart + performers + issues ===== */
@@ -642,7 +642,7 @@ import {
     }
 
     .performer-item.at-risk {
-      background: var(--red-50);
+      background: var(--alert-50);
     }
 
     .rank-badge {
@@ -674,7 +674,7 @@ import {
 
     .performer-info .category {
       font-size: 0.6875rem;
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
     }
 
     .performer-info .alerts {
@@ -695,7 +695,7 @@ import {
     }
 
     .performer-score .score.low {
-      color: var(--red-600);
+      color: var(--alert-600);
     }
 
     /* Issues List */
@@ -715,9 +715,9 @@ import {
       border-left: 3px solid var(--gray-400);
     }
 
-    .issue-item.critical { border-left-color: var(--red-500); }
-    .issue-item.high { border-left-color: var(--orange-500); }
-    .issue-item.medium { border-left-color: var(--yellow-500); }
+    .issue-item.critical { border-left-color: var(--alert-500); }
+    .issue-item.high { border-left-color: var(--warning-500); }
+    .issue-item.medium { border-left-color: var(--warning-500); }
 
     .issue-icon {
       width: 28px;
@@ -753,7 +753,7 @@ import {
       gap: 0.5rem;
       align-items: center;
       font-size: 0.6875rem;
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
       margin-top: 0.125rem;
       flex-wrap: wrap;
     }
@@ -761,7 +761,7 @@ import {
     .empty-state {
       padding: 2rem;
       text-align: center;
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
     }
 
     /* Compare Dialog */

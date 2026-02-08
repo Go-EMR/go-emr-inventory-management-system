@@ -588,7 +588,7 @@ import { Tenant, TenantBranding, TenantContactInfo, TenantSettings } from '@shar
     /* Header Styles */
     .settings-header {
       background: var(--surface-card);
-      border-bottom: 1px solid var(--surface-border);
+      border-bottom: 1px solid var(--border-color);
       padding: 1.5rem 2rem;
     }
 
@@ -610,7 +610,7 @@ import { Tenant, TenantBranding, TenantContactInfo, TenantSettings } from '@shar
       margin: 0 0 0.5rem 0;
       font-size: 1.5rem;
       font-weight: 700;
-      color: var(--text-color);
+      color: var(--text-primary);
     }
 
     .org-meta {
@@ -636,7 +636,7 @@ import { Tenant, TenantBranding, TenantContactInfo, TenantSettings } from '@shar
     .settings-sidebar {
       width: 260px;
       background: var(--surface-card);
-      border-right: 1px solid var(--surface-border);
+      border-right: 1px solid var(--border-color);
       padding: 1.5rem 0;
       flex-shrink: 0;
     }
@@ -657,7 +657,7 @@ import { Tenant, TenantBranding, TenantContactInfo, TenantSettings } from '@shar
       background: transparent;
       border-radius: 0.5rem;
       cursor: pointer;
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
       font-size: 0.9375rem;
       font-weight: 500;
       transition: all 0.2s;
@@ -671,7 +671,7 @@ import { Tenant, TenantBranding, TenantContactInfo, TenantSettings } from '@shar
 
       &:hover {
         background: var(--surface-hover);
-        color: var(--text-color);
+        color: var(--text-primary);
       }
 
       &.active {
@@ -702,12 +702,12 @@ import { Tenant, TenantBranding, TenantContactInfo, TenantSettings } from '@shar
         margin: 0 0 0.25rem 0;
         font-size: 1.375rem;
         font-weight: 600;
-        color: var(--text-color);
+        color: var(--text-primary);
       }
 
       p {
         margin: 0;
-        color: var(--text-color-secondary);
+        color: var(--text-secondary);
         font-size: 0.9375rem;
       }
     }
@@ -715,7 +715,7 @@ import { Tenant, TenantBranding, TenantContactInfo, TenantSettings } from '@shar
     /* Form Card */
     .form-card {
       background: var(--surface-card);
-      border: 1px solid var(--surface-border);
+      border: 1px solid var(--border-color);
       border-radius: 0.75rem;
       padding: 1.5rem;
     }
@@ -723,7 +723,7 @@ import { Tenant, TenantBranding, TenantContactInfo, TenantSettings } from '@shar
     .form-section {
       padding-bottom: 1.5rem;
       margin-bottom: 1.5rem;
-      border-bottom: 1px solid var(--surface-border);
+      border-bottom: 1px solid var(--border-color);
 
       &:last-of-type {
         border-bottom: none;
@@ -735,12 +735,12 @@ import { Tenant, TenantBranding, TenantContactInfo, TenantSettings } from '@shar
         margin: 0 0 1rem 0;
         font-size: 1rem;
         font-weight: 600;
-        color: var(--text-color);
+        color: var(--text-primary);
       }
 
       .section-description {
         margin: 0 0 1rem 0;
-        color: var(--text-color-secondary);
+        color: var(--text-secondary);
         font-size: 0.875rem;
       }
     }
@@ -763,7 +763,7 @@ import { Tenant, TenantBranding, TenantContactInfo, TenantSettings } from '@shar
       label {
         font-size: 0.875rem;
         font-weight: 500;
-        color: var(--text-color);
+        color: var(--text-primary);
       }
     }
 
@@ -771,7 +771,7 @@ import { Tenant, TenantBranding, TenantContactInfo, TenantSettings } from '@shar
       display: flex;
       justify-content: flex-end;
       padding-top: 1.5rem;
-      border-top: 1px solid var(--surface-border);
+      border-top: 1px solid var(--border-color);
       margin-top: 1.5rem;
 
       &.space-between {
@@ -821,7 +821,7 @@ import { Tenant, TenantBranding, TenantContactInfo, TenantSettings } from '@shar
 
     .plan-details p {
       margin: 0;
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
       font-size: 0.875rem;
     }
 
@@ -840,7 +840,7 @@ import { Tenant, TenantBranding, TenantContactInfo, TenantSettings } from '@shar
     .upload-preview {
       width: 120px;
       height: 80px;
-      border: 2px dashed var(--surface-border);
+      border: 2px dashed var(--border-color);
       border-radius: 0.5rem;
       display: flex;
       align-items: center;
@@ -859,7 +859,7 @@ import { Tenant, TenantBranding, TenantContactInfo, TenantSettings } from '@shar
       flex-direction: column;
       align-items: center;
       gap: 0.25rem;
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
 
       i {
         font-size: 1.5rem;
@@ -894,14 +894,14 @@ import { Tenant, TenantBranding, TenantContactInfo, TenantSettings } from '@shar
       p {
         margin: 0 0 0.75rem 0;
         font-size: 0.8125rem;
-        color: var(--text-color-secondary);
+        color: var(--text-secondary);
       }
 
       small {
         display: block;
         margin-top: 0.5rem;
         font-size: 0.75rem;
-        color: var(--text-color-secondary);
+        color: var(--text-secondary);
       }
     }
 
@@ -924,7 +924,7 @@ import { Tenant, TenantBranding, TenantContactInfo, TenantSettings } from '@shar
         display: block;
         margin-top: 0.5rem;
         font-size: 0.75rem;
-        color: var(--text-color-secondary);
+        color: var(--text-secondary);
       }
     }
 
@@ -983,7 +983,7 @@ import { Tenant, TenantBranding, TenantContactInfo, TenantSettings } from '@shar
       align-items: center;
       gap: 1rem;
       padding: 1rem;
-      border: 1px solid var(--surface-border);
+      border: 1px solid var(--border-color);
       border-radius: 0.5rem;
       background: var(--surface-card);
       transition: all 0.2s;
@@ -1001,7 +1001,7 @@ import { Tenant, TenantBranding, TenantContactInfo, TenantSettings } from '@shar
         }
 
         .feature-content h4 {
-          color: var(--text-color);
+          color: var(--text-primary);
         }
       }
 
@@ -1012,7 +1012,7 @@ import { Tenant, TenantBranding, TenantContactInfo, TenantSettings } from '@shar
           background: var(--surface-hover);
 
           i {
-            color: var(--text-color-secondary);
+            color: var(--text-secondary);
           }
         }
       }
@@ -1030,7 +1030,7 @@ import { Tenant, TenantBranding, TenantContactInfo, TenantSettings } from '@shar
 
       i {
         font-size: 1.25rem;
-        color: var(--primary-color);
+        color: var(--primary-500);
       }
     }
 
@@ -1041,13 +1041,13 @@ import { Tenant, TenantBranding, TenantContactInfo, TenantSettings } from '@shar
         margin: 0 0 0.25rem 0;
         font-size: 0.9375rem;
         font-weight: 600;
-        color: var(--text-color);
+        color: var(--text-primary);
       }
 
       p {
         margin: 0;
         font-size: 0.8125rem;
-        color: var(--text-color-secondary);
+        color: var(--text-secondary);
       }
     }
 
@@ -1072,11 +1072,11 @@ import { Tenant, TenantBranding, TenantContactInfo, TenantSettings } from '@shar
 
         &.locked {
           background: var(--surface-hover);
-          color: var(--text-color-secondary);
-          border: 1px solid var(--surface-border);
+          color: var(--text-secondary);
+          border: 1px solid var(--border-color);
 
           i {
-            color: var(--text-color-secondary);
+            color: var(--text-secondary);
           }
         }
       }
@@ -1092,7 +1092,7 @@ import { Tenant, TenantBranding, TenantContactInfo, TenantSettings } from '@shar
     .usage-item {
       padding: 1rem;
       background: var(--surface-card);
-      border: 1px solid var(--surface-border);
+      border: 1px solid var(--border-color);
       border-radius: 0.5rem;
     }
 
@@ -1106,13 +1106,13 @@ import { Tenant, TenantBranding, TenantContactInfo, TenantSettings } from '@shar
     .usage-label {
       font-size: 0.875rem;
       font-weight: 500;
-      color: var(--text-color);
+      color: var(--text-primary);
     }
 
     .usage-value {
       font-size: 0.875rem;
       font-weight: 600;
-      color: var(--primary-color);
+      color: var(--primary-500);
     }
 
     .usage-bar {
@@ -1124,7 +1124,7 @@ import { Tenant, TenantBranding, TenantContactInfo, TenantSettings } from '@shar
 
     .usage-fill {
       height: 100%;
-      background: linear-gradient(90deg, var(--primary-color) 0%, var(--primary-400) 100%);
+      background: linear-gradient(90deg, var(--primary-500) 0%, var(--primary-400) 100%);
       border-radius: 4px;
       transition: width 0.3s ease;
     }
@@ -1136,7 +1136,7 @@ import { Tenant, TenantBranding, TenantContactInfo, TenantSettings } from '@shar
       align-items: center;
       padding: 1.25rem;
       background: var(--surface-card);
-      border: 2px solid var(--primary-color);
+      border: 2px solid var(--primary-500);
       border-radius: 0.75rem;
       margin-top: 1.5rem;
     }
@@ -1148,20 +1148,20 @@ import { Tenant, TenantBranding, TenantContactInfo, TenantSettings } from '@shar
 
       i {
         font-size: 1.75rem;
-        color: var(--primary-color);
+        color: var(--primary-500);
       }
 
       h4 {
         margin: 0 0 0.25rem 0;
         font-size: 1rem;
         font-weight: 600;
-        color: var(--text-color);
+        color: var(--text-primary);
       }
 
       p {
         margin: 0;
         font-size: 0.875rem;
-        color: var(--text-color-secondary);
+        color: var(--text-secondary);
       }
     }
 
@@ -1174,7 +1174,7 @@ import { Tenant, TenantBranding, TenantContactInfo, TenantSettings } from '@shar
       .settings-sidebar {
         width: 100%;
         border-right: none;
-        border-bottom: 1px solid var(--surface-border);
+        border-bottom: 1px solid var(--border-color);
         padding: 1rem 0;
       }
 

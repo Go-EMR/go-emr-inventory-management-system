@@ -136,7 +136,7 @@ import { Tenant, TenantStatus } from '@shared/models';
 
     .tenant-card {
       background: var(--surface-card);
-      border: 1px solid var(--surface-border);
+      border: 1px solid var(--border-color);
       border-radius: 1rem;
       cursor: pointer;
       transition: all 0.3s ease;
@@ -145,7 +145,7 @@ import { Tenant, TenantStatus } from '@shared/models';
       &:hover:not(.disabled) {
         transform: translateY(-4px);
         box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
-        border-color: var(--primary-color);
+        border-color: var(--primary-500);
       }
 
       &.disabled {
@@ -165,7 +165,7 @@ import { Tenant, TenantStatus } from '@shared/models';
       align-items: center;
       padding: 1rem 1.5rem;
       background: var(--surface-hover);
-      border-top: 1px solid var(--surface-border);
+      border-top: 1px solid var(--border-color);
     }
 
     .tenant-logo {
@@ -183,13 +183,13 @@ import { Tenant, TenantStatus } from '@shared/models';
       text-transform: uppercase;
 
       &.status-suspended {
-        background: var(--red-100);
-        color: var(--red-700);
+        background: var(--alert-100);
+        color: var(--alert-700);
       }
 
       &.status-pending {
-        background: var(--yellow-100);
-        color: var(--yellow-700);
+        background: var(--warning-100);
+        color: var(--warning-700);
       }
 
       &.status-trial {
@@ -200,7 +200,7 @@ import { Tenant, TenantStatus } from '@shared/models';
 
     .no-tenants {
       background: var(--surface-card);
-      border: 1px solid var(--surface-border);
+      border: 1px solid var(--border-color);
       border-radius: 1rem;
       padding: 3rem;
     }

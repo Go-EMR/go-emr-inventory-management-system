@@ -285,7 +285,7 @@ import { Tenant, TenantStatus, SubscriptionPlan } from '@shared/models';
     /* Page Header */
     .page-header {
       background: var(--surface-card);
-      border-bottom: 1px solid var(--surface-border);
+      border-bottom: 1px solid var(--border-color);
       padding: 1.5rem 2rem;
     }
 
@@ -323,12 +323,12 @@ import { Tenant, TenantStatus, SubscriptionPlan } from '@shared/models';
         margin: 0 0 0.25rem 0;
         font-size: 1.5rem;
         font-weight: 700;
-        color: var(--text-color);
+        color: var(--text-primary);
       }
 
       p {
         margin: 0;
-        color: var(--text-color-secondary);
+        color: var(--text-secondary);
         font-size: 0.9375rem;
       }
     }
@@ -350,7 +350,7 @@ import { Tenant, TenantStatus, SubscriptionPlan } from '@shared/models';
 
     .stat-card {
       background: var(--surface-card);
-      border: 1px solid var(--surface-border);
+      border: 1px solid var(--border-color);
       border-radius: 0.75rem;
       padding: 1.25rem;
       display: flex;
@@ -393,8 +393,8 @@ import { Tenant, TenantStatus, SubscriptionPlan } from '@shared/models';
       }
 
       &.suspended {
-        background: var(--red-50);
-        i { color: var(--red-600); }
+        background: var(--alert-50);
+        i { color: var(--alert-600); }
       }
     }
 
@@ -406,13 +406,13 @@ import { Tenant, TenantStatus, SubscriptionPlan } from '@shared/models';
     .stat-value {
       font-size: 1.5rem;
       font-weight: 700;
-      color: var(--text-color);
+      color: var(--text-primary);
       line-height: 1.2;
     }
 
     .stat-label {
       font-size: 0.8125rem;
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
       margin-top: 0.125rem;
     }
 
@@ -426,7 +426,7 @@ import { Tenant, TenantStatus, SubscriptionPlan } from '@shared/models';
 
     .plan-card {
       background: var(--surface-card);
-      border: 1px solid var(--surface-border);
+      border: 1px solid var(--border-color);
       border-radius: 0.75rem;
       padding: 1rem 1.25rem;
 
@@ -439,7 +439,7 @@ import { Tenant, TenantStatus, SubscriptionPlan } from '@shared/models';
 
       .plan-name {
         font-weight: 600;
-        color: var(--text-color);
+        color: var(--text-primary);
       }
 
       .plan-count {
@@ -479,7 +479,7 @@ import { Tenant, TenantStatus, SubscriptionPlan } from '@shared/models';
     /* Organizations Section */
     .organizations-section {
       background: var(--surface-card);
-      border: 1px solid var(--surface-border);
+      border: 1px solid var(--border-color);
       border-radius: 0.75rem;
     }
 
@@ -488,7 +488,7 @@ import { Tenant, TenantStatus, SubscriptionPlan } from '@shared/models';
       justify-content: space-between;
       align-items: center;
       padding: 1.25rem 1.5rem;
-      border-bottom: 1px solid var(--surface-border);
+      border-bottom: 1px solid var(--border-color);
       flex-wrap: wrap;
       gap: 1rem;
 
@@ -496,7 +496,7 @@ import { Tenant, TenantStatus, SubscriptionPlan } from '@shared/models';
         margin: 0;
         font-size: 1.125rem;
         font-weight: 600;
-        color: var(--text-color);
+        color: var(--text-primary);
       }
     }
 
@@ -564,8 +564,8 @@ import { Tenant, TenantStatus, SubscriptionPlan } from '@shared/models';
 
       &.status-active { background: var(--green-500); }
       &.status-trial { background: var(--blue-500); }
-      &.status-pending { background: var(--yellow-500); }
-      &.status-suspended { background: var(--red-500); }
+      &.status-pending { background: var(--warning-500); }
+      &.status-suspended { background: var(--alert-500); }
     }
 
     .org-info {
@@ -574,7 +574,7 @@ import { Tenant, TenantStatus, SubscriptionPlan } from '@shared/models';
 
     .org-name {
       font-weight: 600;
-      color: var(--text-color);
+      color: var(--text-primary);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -582,7 +582,7 @@ import { Tenant, TenantStatus, SubscriptionPlan } from '@shared/models';
 
     .org-slug {
       font-size: 0.8125rem;
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -602,7 +602,7 @@ import { Tenant, TenantStatus, SubscriptionPlan } from '@shared/models';
 
       &.users, &.location, &.created {
         font-size: 0.8125rem;
-        color: var(--text-color-secondary);
+        color: var(--text-secondary);
         min-width: 100px;
 
         i {
@@ -658,13 +658,13 @@ import { Tenant, TenantStatus, SubscriptionPlan } from '@shared/models';
       }
 
       &.status-pending {
-        background: var(--yellow-100);
-        color: var(--yellow-700);
+        background: var(--warning-100);
+        color: var(--warning-700);
       }
 
       &.status-suspended {
-        background: var(--red-100);
-        color: var(--red-700);
+        background: var(--alert-100);
+        color: var(--alert-700);
       }
     }
 
@@ -692,7 +692,7 @@ import { Tenant, TenantStatus, SubscriptionPlan } from '@shared/models';
 
       i {
         font-size: 2rem;
-        color: var(--text-color-secondary);
+        color: var(--text-secondary);
       }
     }
 
@@ -700,22 +700,22 @@ import { Tenant, TenantStatus, SubscriptionPlan } from '@shared/models';
       margin: 0 0 0.5rem 0;
       font-size: 1.125rem;
       font-weight: 600;
-      color: var(--text-color);
+      color: var(--text-primary);
     }
 
     .empty-state p {
       margin: 0 0 1.5rem 0;
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
     }
 
     .list-footer {
       padding: 1rem 1.5rem;
-      border-top: 1px solid var(--surface-border);
+      border-top: 1px solid var(--border-color);
     }
 
     .org-count {
       font-size: 0.8125rem;
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
     }
 
     /* Menu */

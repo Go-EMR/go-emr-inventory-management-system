@@ -508,7 +508,7 @@ export class DepreciationDashboardComponent implements OnInit {
 
   setupCharts(): void {
     const documentStyle = getComputedStyle(document.documentElement);
-    const textColor = documentStyle.getPropertyValue('--text-color') || '#374151';
+    const textColor = documentStyle.getPropertyValue('--text-primary') || '#374151';
     const surfaceBorder = documentStyle.getPropertyValue('--border-color') || '#e5e7eb';
 
     // Method Chart

@@ -255,7 +255,7 @@ import { ImportJob, ImportJobStatus } from '@shared/models';
     .step-number { width: 2rem; height: 2rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.875rem; background: var(--bg-hover, #e5e7eb); color: var(--text-secondary, #6b7280); border: 1px solid var(--border-color, #d1d5db); }
     .step-indicator.active .step-number { background: var(--primary-600, #059669); color: white; border-color: var(--primary-600, #059669); }
     .step-indicator.completed .step-number { background: var(--primary-500, #10b981); color: white; border-color: var(--primary-500, #10b981); }
-    .step-label { font-size: 0.75rem; color: var(--text-color-secondary); }
+    .step-label { font-size: 0.75rem; color: var(--text-secondary); }
 
     .wizard-content {
       background: var(--bg-card);

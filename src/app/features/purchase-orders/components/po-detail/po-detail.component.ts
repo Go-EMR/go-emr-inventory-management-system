@@ -262,7 +262,7 @@ interface POEvent {
         </div>
       } @else {
         <div class="not-found">
-          <i class="pi pi-file" style="font-size: 4rem; color: var(--text-color-secondary);"></i>
+          <i class="pi pi-file" style="font-size: 4rem; color: var(--text-secondary);"></i>
           <h2>Purchase Order Not Found</h2>
           <p>The requested purchase order could not be found.</p>
           <p-button label="Back to List" icon="pi pi-arrow-left" routerLink="/purchase-orders" />
@@ -359,7 +359,7 @@ interface POEvent {
     }
 
     .not-found p {
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
       margin-bottom: 1rem;
     }
 
@@ -379,7 +379,7 @@ interface POEvent {
     }
 
     .breadcrumb a {
-      color: var(--primary-color);
+      color: var(--primary-500);
       text-decoration: none;
     }
 
@@ -389,7 +389,7 @@ interface POEvent {
 
     .breadcrumb i {
       font-size: 0.75rem;
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
     }
 
     .title-row {
@@ -404,7 +404,7 @@ interface POEvent {
     }
 
     .supplier-name {
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
       margin: 0.25rem 0 0;
     }
 
@@ -449,7 +449,7 @@ interface POEvent {
 
     .info-item .label {
       font-size: 0.75rem;
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
       text-transform: uppercase;
     }
 
@@ -459,11 +459,11 @@ interface POEvent {
 
     .info-item .value.total {
       font-size: 1.25rem;
-      color: var(--primary-color);
+      color: var(--primary-500);
     }
 
     .info-item .value.overdue {
-      color: var(--red-600);
+      color: var(--alert-600);
       display: flex;
       align-items: center;
       gap: 0.25rem;
@@ -471,7 +471,7 @@ interface POEvent {
 
     .notes-section .label {
       font-size: 0.75rem;
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
       text-transform: uppercase;
     }
 
@@ -490,13 +490,13 @@ interface POEvent {
     }
 
     .incomplete {
-      color: var(--orange-600);
+      color: var(--warning-600);
     }
 
     .receipt-progress {
       margin-top: 1.5rem;
       padding-top: 1rem;
-      border-top: 1px solid var(--surface-border);
+      border-top: 1px solid var(--border-color);
     }
 
     .progress-label {
@@ -529,12 +529,12 @@ interface POEvent {
 
     .event-user {
       font-size: 0.875rem;
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
     }
 
     .event-date {
       font-size: 0.75rem;
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
     }
 
     /* Receive Dialog */
@@ -552,7 +552,7 @@ interface POEvent {
     .receive-lines td {
       padding: 0.75rem;
       text-align: left;
-      border-bottom: 1px solid var(--surface-border);
+      border-bottom: 1px solid var(--border-color);
     }
 
     .receive-lines th {
@@ -702,7 +702,7 @@ export class PoDetailComponent implements OnInit {
         action: 'Partial Shipment Received',
         user: 'Warehouse',
         icon: 'pi pi-box',
-        color: 'var(--orange-500)'
+        color: 'var(--warning-500)'
       });
     }
 
@@ -722,7 +722,7 @@ export class PoDetailComponent implements OnInit {
         action: 'Order Cancelled',
         user: 'Admin',
         icon: 'pi pi-times',
-        color: 'var(--red-500)'
+        color: 'var(--alert-500)'
       });
     }
 

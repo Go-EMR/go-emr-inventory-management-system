@@ -230,7 +230,7 @@ interface QuantityMethodOption {
             <tr>
               <td colspan="9" class="text-center">
                 <div class="empty-state">
-                  <i class="pi pi-cog" style="font-size: 3rem; color: var(--text-color-secondary);"></i>
+                  <i class="pi pi-cog" style="font-size: 3rem; color: var(--text-secondary);"></i>
                   <h3>No Auto-PO Rules</h3>
                   <p>Create your first rule to automate purchase order generation</p>
                   <p-button label="Create Rule" icon="pi pi-plus" (onClick)="openCreateDialog()" />
@@ -614,7 +614,7 @@ interface QuantityMethodOption {
     }
 
     .breadcrumb a {
-      color: var(--primary-color);
+      color: var(--primary-500);
       text-decoration: none;
     }
 
@@ -624,7 +624,7 @@ interface QuantityMethodOption {
 
     .breadcrumb i {
       font-size: 0.75rem;
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
     }
 
     .header-content h2 {
@@ -643,13 +643,13 @@ interface QuantityMethodOption {
 
     .rule-description {
       font-size: 0.75rem;
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
     }
 
     .cron-display {
       font-family: monospace;
       font-size: 0.75rem;
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
       margin-top: 0.25rem;
     }
 
@@ -667,7 +667,7 @@ interface QuantityMethodOption {
     }
 
     .scope-all {
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
       font-style: italic;
     }
 
@@ -676,7 +676,7 @@ interface QuantityMethodOption {
     }
 
     .quantity-detail {
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
       font-size: 0.75rem;
     }
 
@@ -690,7 +690,7 @@ interface QuantityMethodOption {
 
     .approval-required .threshold {
       font-size: 0.75rem;
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
     }
 
     .approval-auto {
@@ -702,7 +702,7 @@ interface QuantityMethodOption {
     }
 
     .never-run {
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
       font-style: italic;
     }
 
@@ -721,7 +721,7 @@ interface QuantityMethodOption {
     }
 
     .empty-state p {
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
       margin-bottom: 1rem;
     }
 
@@ -732,7 +732,7 @@ interface QuantityMethodOption {
     .step-number { width: 2rem; height: 2rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.875rem; background: var(--bg-hover, #e5e7eb); color: var(--text-secondary, #6b7280); border: 1px solid var(--border-color, #d1d5db); }
     .step-indicator.active .step-number { background: var(--primary-600, #059669); color: white; border-color: var(--primary-600, #059669); }
     .step-indicator.completed .step-number { background: var(--primary-500, #10b981); color: white; border-color: var(--primary-500, #10b981); }
-    .step-label { font-size: 0.75rem; color: var(--text-color-secondary); }
+    .step-label { font-size: 0.75rem; color: var(--text-secondary); }
 
     /* Dialog Form */
     .rule-form {
@@ -744,7 +744,7 @@ interface QuantityMethodOption {
     }
 
     .step-description {
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
       margin-bottom: 1.5rem;
     }
 
@@ -776,7 +776,7 @@ interface QuantityMethodOption {
 
     .hint {
       font-size: 0.75rem;
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
     }
 
     .hint.block {
@@ -796,7 +796,7 @@ interface QuantityMethodOption {
       align-items: flex-start;
       gap: 1rem;
       padding: 1rem;
-      border: 2px solid var(--surface-border);
+      border: 2px solid var(--border-color);
       border-radius: 8px;
       cursor: pointer;
       transition: all 0.2s;
@@ -807,13 +807,13 @@ interface QuantityMethodOption {
     }
 
     .trigger-option.selected {
-      border-color: var(--primary-color);
+      border-color: var(--primary-500);
       background: var(--primary-50);
     }
 
     .trigger-option i {
       font-size: 1.5rem;
-      color: var(--primary-color);
+      color: var(--primary-500);
     }
 
     .option-content {
@@ -827,7 +827,7 @@ interface QuantityMethodOption {
 
     .option-description {
       font-size: 0.75rem;
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
     }
 
     /* Method Option */
@@ -842,7 +842,7 @@ interface QuantityMethodOption {
 
     .method-description {
       font-size: 0.75rem;
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
     }
 
     /* Dialog Footer */

@@ -116,12 +116,12 @@ import { Tenant } from '@shared/models';
       padding: 0.5rem 0.75rem;
       border-radius: 0.5rem;
       background: transparent;
-      border: 1px solid var(--surface-border);
+      border: 1px solid var(--border-color);
       transition: all 0.2s;
 
       &:hover {
         background: var(--surface-hover);
-        border-color: var(--primary-color);
+        border-color: var(--primary-500);
       }
     }
 
@@ -198,7 +198,7 @@ import { Tenant } from '@shared/models';
     }
 
     .check-icon {
-      color: var(--primary-color);
+      color: var(--primary-500);
       font-size: 0.875rem;
     }
 

@@ -206,7 +206,11 @@ import {
                     <td>
                       <div class="technician-cell">
                         <i class="pi pi-user"></i>
-                        <span>{{ record.technician }}</span>
+                        @if (record.technician) {
+                          <span>{{ record.technician }}</span>
+                        } @else {
+                          <span class="unassigned">Unassigned</span>
+                        }
                       </div>
                     </td>
                     <td>
@@ -581,6 +585,11 @@ import {
     }
 
     .technician-cell i {
+      color: var(--text-tertiary);
+    }
+
+    .unassigned {
+      font-style: italic;
       color: var(--text-tertiary);
     }
 

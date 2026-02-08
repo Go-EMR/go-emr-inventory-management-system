@@ -213,7 +213,7 @@ import {
               <tr>
                 <td colspan="5" class="text-center">
                   <div class="empty-state">
-                    <i class="pi pi-cog" style="font-size: 2rem; color: var(--text-color-secondary);"></i>
+                    <i class="pi pi-cog" style="font-size: 2rem; color: var(--text-secondary);"></i>
                     <p>No active auto-PO rules</p>
                     <p-button label="Create Rule" icon="pi pi-plus" routerLink="/purchase-orders/auto-po/rules/new" />
                   </div>
@@ -259,7 +259,7 @@ import {
 
           @if (recentExecutions().length === 0) {
             <div class="empty-state">
-              <i class="pi pi-history" style="font-size: 2rem; color: var(--text-color-secondary);"></i>
+              <i class="pi pi-history" style="font-size: 2rem; color: var(--text-secondary);"></i>
               <p>No recent executions</p>
             </div>
           }
@@ -533,7 +533,7 @@ import {
     }
 
     .summary-card.alert.has-alerts {
-      border-left: 4px solid var(--orange-500);
+      border-left: 4px solid var(--warning-500);
     }
 
     .card-icon {
@@ -548,8 +548,8 @@ import {
 
     .card-icon.rules { background: var(--blue-100); color: var(--blue-600); }
     .card-icon.monitored { background: var(--purple-100); color: var(--purple-600); }
-    .card-icon.below-reorder { background: var(--orange-100); color: var(--orange-600); }
-    .card-icon.pending { background: var(--yellow-100); color: var(--yellow-700); }
+    .card-icon.below-reorder { background: var(--warning-100); color: var(--warning-600); }
+    .card-icon.pending { background: var(--warning-100); color: var(--warning-700); }
     .card-icon.today { background: var(--green-100); color: var(--green-600); }
     .card-icon.value { background: var(--teal-100); color: var(--teal-600); }
 
@@ -566,7 +566,7 @@ import {
 
     .card-label {
       font-size: 0.875rem;
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
     }
 
     .dashboard-grid {
@@ -606,11 +606,11 @@ import {
 
     .rule-name .description {
       font-size: 0.75rem;
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
     }
 
     .never-run {
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
       font-style: italic;
     }
 
@@ -622,7 +622,7 @@ import {
     .empty-state {
       padding: 2rem;
       text-align: center;
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
     }
 
     .empty-state p {
@@ -649,8 +649,8 @@ import {
     }
 
     .execution-marker.completed { background: var(--green-500); }
-    .execution-marker.warning { background: var(--orange-500); }
-    .execution-marker.failed { background: var(--red-500); }
+    .execution-marker.warning { background: var(--warning-500); }
+    .execution-marker.failed { background: var(--alert-500); }
     .execution-marker.running { background: var(--blue-500); }
     .execution-marker.pending { background: var(--gray-400); }
 
@@ -674,7 +674,7 @@ import {
       flex-wrap: wrap;
       gap: 1rem;
       font-size: 0.875rem;
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
       margin-bottom: 0.25rem;
     }
 
@@ -686,7 +686,7 @@ import {
 
     .execution-time {
       font-size: 0.75rem;
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
     }
 
     .triggered-by {
@@ -696,7 +696,7 @@ import {
     .execution-issues {
       margin-top: 0.5rem;
       font-size: 0.875rem;
-      color: var(--orange-600);
+      color: var(--warning-600);
       display: flex;
       align-items: center;
       gap: 0.25rem;
@@ -714,16 +714,16 @@ import {
 
     .item-sku {
       font-size: 0.75rem;
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
     }
 
     .current-qty.critical {
-      color: var(--red-600);
+      color: var(--alert-600);
       font-weight: 600;
     }
 
     .no-supplier {
-      color: var(--orange-600);
+      color: var(--warning-600);
       display: flex;
       align-items: center;
       gap: 0.25rem;
@@ -731,7 +731,7 @@ import {
     }
 
     tr.has-warning {
-      background: var(--orange-50);
+      background: var(--warning-50);
     }
 
     .view-all {
@@ -758,11 +758,11 @@ import {
 
     .preview-stat .stat-label {
       font-size: 0.875rem;
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
     }
 
     .preview-stat.warning .stat-value {
-      color: var(--orange-600);
+      color: var(--warning-600);
     }
 
     .loading-preview {
@@ -810,12 +810,12 @@ import {
 
     .result-stats .label {
       font-size: 0.75rem;
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
     }
 
     .result-issues {
       text-align: left;
-      background: var(--orange-50);
+      background: var(--warning-50);
       border-radius: 6px;
       padding: 1rem;
       margin-top: 1rem;
@@ -823,7 +823,7 @@ import {
 
     .result-issues h4 {
       margin: 0 0 0.5rem 0;
-      color: var(--orange-700);
+      color: var(--warning-700);
     }
 
     .result-issues ul {

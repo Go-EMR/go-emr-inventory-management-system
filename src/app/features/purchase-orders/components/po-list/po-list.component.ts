@@ -281,7 +281,7 @@ interface StatusOption {
             <tr>
               <td colspan="9" class="text-center">
                 <div class="empty-state">
-                  <i class="pi pi-file" style="font-size: 3rem; color: var(--text-color-secondary);"></i>
+                  <i class="pi pi-file" style="font-size: 3rem; color: var(--text-secondary);"></i>
                   <h3>No Purchase Orders</h3>
                   <p>Create your first purchase order to get started</p>
                   <p-button label="Create PO" icon="pi pi-plus" (onClick)="openCreateDialog()" />
@@ -570,7 +570,7 @@ interface StatusOption {
     }
 
     .card-icon.total { background: var(--blue-100); color: var(--blue-600); }
-    .card-icon.pending { background: var(--yellow-100); color: var(--yellow-700); }
+    .card-icon.pending { background: var(--warning-100); color: var(--warning-700); }
     .card-icon.awaiting { background: var(--purple-100); color: var(--purple-600); }
     .card-icon.value { background: var(--green-100); color: var(--green-600); }
 
@@ -587,7 +587,7 @@ interface StatusOption {
 
     .card-label {
       font-size: 0.875rem;
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
     }
 
     :host ::ng-deep .filter-card .p-card-body {
@@ -615,7 +615,7 @@ interface StatusOption {
     }
 
     .po-link {
-      color: var(--primary-color);
+      color: var(--primary-500);
       text-decoration: none;
       font-weight: 500;
     }
@@ -625,23 +625,23 @@ interface StatusOption {
     }
 
     tr.overdue {
-      background: var(--red-50);
+      background: var(--alert-50);
     }
 
     .overdue-date {
-      color: var(--red-600);
+      color: var(--alert-600);
       display: flex;
       align-items: center;
       gap: 0.25rem;
     }
 
     .no-date {
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
       font-style: italic;
     }
 
     .manual-source {
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
       font-size: 0.875rem;
     }
 
@@ -660,7 +660,7 @@ interface StatusOption {
     }
 
     .empty-state p {
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
       margin-bottom: 1rem;
     }
 
@@ -722,7 +722,7 @@ interface StatusOption {
     .lines-table td {
       padding: 0.75rem;
       text-align: left;
-      border-bottom: 1px solid var(--surface-border);
+      border-bottom: 1px solid var(--border-color);
     }
 
     .lines-table th {
@@ -736,7 +736,7 @@ interface StatusOption {
     }
 
     .lines-table tfoot td {
-      border-top: 2px solid var(--surface-border);
+      border-top: 2px solid var(--border-color);
       background: var(--surface-ground);
     }
 
@@ -745,7 +745,7 @@ interface StatusOption {
       text-align: center;
       background: var(--surface-ground);
       border-radius: 6px;
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
     }
 
     /* Receive Dialog */
@@ -765,7 +765,7 @@ interface StatusOption {
     }
 
     .supplier {
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
     }
 
     .receive-lines table {
@@ -778,7 +778,7 @@ interface StatusOption {
     .receive-lines td {
       padding: 0.75rem;
       text-align: left;
-      border-bottom: 1px solid var(--surface-border);
+      border-bottom: 1px solid var(--border-color);
     }
 
     .receive-lines th {

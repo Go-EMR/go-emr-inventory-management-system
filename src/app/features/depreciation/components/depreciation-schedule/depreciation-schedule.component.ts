@@ -464,7 +464,7 @@ export class DepreciationScheduleComponent implements OnInit {
 
   setupChart(schedule: DepreciationScheduleEntry[]): void {
     const documentStyle = getComputedStyle(document.documentElement);
-    const textColor = documentStyle.getPropertyValue('--text-color') || '#374151';
+    const textColor = documentStyle.getPropertyValue('--text-primary') || '#374151';
     const surfaceBorder = documentStyle.getPropertyValue('--border-color') || '#e5e7eb';
 
     // Sample every 12th period for annual view, or less if fewer periods

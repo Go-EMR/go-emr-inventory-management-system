@@ -482,7 +482,7 @@ import { Tenant, TenantStatus, SubscriptionPlan, TenantFeatureFlags, TenantBrand
   styles: [`
     .required::after {
       content: ' *';
-      color: var(--red-500);
+      color: var(--alert-500);
     }
 
     .logo-preview {
@@ -494,7 +494,7 @@ import { Tenant, TenantStatus, SubscriptionPlan, TenantFeatureFlags, TenantBrand
     .logo-placeholder {
       width: 100px;
       height: 60px;
-      border: 2px dashed var(--surface-border);
+      border: 2px dashed var(--border-color);
       border-radius: 0.5rem;
       display: flex;
       align-items: center;
@@ -502,7 +502,7 @@ import { Tenant, TenantStatus, SubscriptionPlan, TenantFeatureFlags, TenantBrand
     }
 
     .brand-preview {
-      border: 1px solid var(--surface-border);
+      border: 1px solid var(--border-color);
     }
 
     .preview-logo {

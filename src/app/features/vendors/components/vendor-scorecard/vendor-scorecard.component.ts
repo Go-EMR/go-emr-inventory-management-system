@@ -527,7 +527,7 @@ import {
         </p-card>
       } @else {
         <div class="not-found">
-          <i class="pi pi-building" style="font-size: 4rem; color: var(--text-color-secondary);"></i>
+          <i class="pi pi-building" style="font-size: 4rem; color: var(--text-secondary);"></i>
           <h2>Vendor Not Found</h2>
           <p>The requested vendor could not be found.</p>
           <p-button label="Back to Performance Dashboard" icon="pi pi-arrow-left" routerLink="/vendors/performance" />
@@ -618,7 +618,7 @@ import {
     }
 
     .breadcrumb a {
-      color: var(--primary-color);
+      color: var(--primary-500);
       text-decoration: none;
     }
 
@@ -643,7 +643,7 @@ import {
     }
 
     .period {
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
       margin: 0.25rem 0 0;
     }
 
@@ -692,7 +692,7 @@ import {
 
     .score-circle .label {
       font-size: 0.75rem;
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
     }
 
     .score-change {
@@ -704,7 +704,7 @@ import {
     }
 
     .score-change.positive { color: var(--green-600); }
-    .score-change.negative { color: var(--red-600); }
+    .score-change.negative { color: var(--alert-600); }
 
     .score-breakdown {
       flex: 1;
@@ -721,7 +721,7 @@ import {
     }
 
     .metric-card.low {
-      border-left: 4px solid var(--red-500);
+      border-left: 4px solid var(--alert-500);
     }
 
     .metric-header {
@@ -730,7 +730,7 @@ import {
       justify-content: center;
       gap: 0.5rem;
       margin-bottom: 0.5rem;
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
       font-size: 0.875rem;
     }
 
@@ -742,7 +742,7 @@ import {
 
     .metric-detail {
       font-size: 0.75rem;
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
       margin-top: 0.5rem;
     }
 
@@ -789,13 +789,13 @@ import {
       font-weight: 600;
     }
 
-    .stat-value.highlight { color: var(--primary-color); }
-    .stat-value.warning { color: var(--orange-600); }
+    .stat-value.highlight { color: var(--primary-500); }
+    .stat-value.warning { color: var(--warning-600); }
     .stat-value.success { color: var(--green-600); }
 
     .stat-label {
       font-size: 0.75rem;
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
     }
 
     .issues-breakdown {
@@ -832,9 +832,9 @@ import {
       border-left: 4px solid var(--gray-400);
     }
 
-    .recommendation-item.critical { border-left-color: var(--red-500); }
-    .recommendation-item.high { border-left-color: var(--orange-500); }
-    .recommendation-item.medium { border-left-color: var(--yellow-500); }
+    .recommendation-item.critical { border-left-color: var(--alert-500); }
+    .recommendation-item.high { border-left-color: var(--warning-500); }
+    .recommendation-item.medium { border-left-color: var(--warning-500); }
 
     .rec-icon {
       width: 40px;
@@ -845,7 +845,7 @@ import {
       align-items: center;
       justify-content: center;
       font-size: 1.25rem;
-      color: var(--primary-color);
+      color: var(--primary-500);
     }
 
     .rec-content {
@@ -865,7 +865,7 @@ import {
 
     .rec-description {
       margin: 0 0 0.5rem;
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
     }
 
     .rec-action {
@@ -890,13 +890,13 @@ import {
 
     .issue-ref {
       font-size: 0.75rem;
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
     }
 
     .empty-state {
       padding: 2rem;
       text-align: center;
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
     }
 
     /* Form */

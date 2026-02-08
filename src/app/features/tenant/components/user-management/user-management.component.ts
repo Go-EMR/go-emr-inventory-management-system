@@ -399,7 +399,7 @@ import { TenantUser, TenantRole, UserTenantMembership } from '@shared/models';
     /* Page Header */
     .page-header {
       background: var(--surface-card);
-      border-bottom: 1px solid var(--surface-border);
+      border-bottom: 1px solid var(--border-color);
       padding: 1.5rem 2rem;
     }
 
@@ -437,12 +437,12 @@ import { TenantUser, TenantRole, UserTenantMembership } from '@shared/models';
         margin: 0 0 0.25rem 0;
         font-size: 1.5rem;
         font-weight: 700;
-        color: var(--text-color);
+        color: var(--text-primary);
       }
 
       p {
         margin: 0;
-        color: var(--text-color-secondary);
+        color: var(--text-secondary);
         font-size: 0.9375rem;
       }
     }
@@ -464,7 +464,7 @@ import { TenantUser, TenantRole, UserTenantMembership } from '@shared/models';
 
     .stat-card {
       background: var(--surface-card);
-      border: 1px solid var(--surface-border);
+      border: 1px solid var(--border-color);
       border-radius: 0.75rem;
       padding: 1.25rem;
       display: flex;
@@ -502,8 +502,8 @@ import { TenantUser, TenantRole, UserTenantMembership } from '@shared/models';
       }
 
       &.pending {
-        background: var(--yellow-50);
-        i { color: var(--yellow-600); }
+        background: var(--warning-50);
+        i { color: var(--warning-600); }
       }
 
       &.admin {
@@ -520,20 +520,20 @@ import { TenantUser, TenantRole, UserTenantMembership } from '@shared/models';
     .stat-value {
       font-size: 1.5rem;
       font-weight: 700;
-      color: var(--text-color);
+      color: var(--text-primary);
       line-height: 1.2;
     }
 
     .stat-label {
       font-size: 0.8125rem;
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
       margin-top: 0.125rem;
     }
 
     /* Users Section */
     .users-section {
       background: var(--surface-card);
-      border: 1px solid var(--surface-border);
+      border: 1px solid var(--border-color);
       border-radius: 0.75rem;
     }
 
@@ -542,13 +542,13 @@ import { TenantUser, TenantRole, UserTenantMembership } from '@shared/models';
       justify-content: space-between;
       align-items: center;
       padding: 1.25rem 1.5rem;
-      border-bottom: 1px solid var(--surface-border);
+      border-bottom: 1px solid var(--border-color);
 
       h2 {
         margin: 0;
         font-size: 1.125rem;
         font-weight: 600;
-        color: var(--text-color);
+        color: var(--text-primary);
       }
     }
 
@@ -622,7 +622,7 @@ import { TenantUser, TenantRole, UserTenantMembership } from '@shared/models';
 
     .user-name {
       font-weight: 600;
-      color: var(--text-color);
+      color: var(--text-primary);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -630,7 +630,7 @@ import { TenantUser, TenantRole, UserTenantMembership } from '@shared/models';
 
     .user-email {
       font-size: 0.8125rem;
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -649,7 +649,7 @@ import { TenantUser, TenantRole, UserTenantMembership } from '@shared/models';
 
       &.activity {
         font-size: 0.8125rem;
-        color: var(--text-color-secondary);
+        color: var(--text-secondary);
         min-width: 140px;
 
         i {
@@ -668,8 +668,8 @@ import { TenantUser, TenantRole, UserTenantMembership } from '@shared/models';
       letter-spacing: 0.025em;
 
       &.role-super-admin {
-        background: var(--red-100);
-        color: var(--red-700);
+        background: var(--alert-100);
+        color: var(--alert-700);
       }
 
       &.role-tenant-admin {
@@ -706,13 +706,13 @@ import { TenantUser, TenantRole, UserTenantMembership } from '@shared/models';
       }
 
       &.status-inactive {
-        background: var(--yellow-100);
-        color: var(--yellow-700);
+        background: var(--warning-100);
+        color: var(--warning-700);
       }
 
       &.status-suspended {
-        background: var(--red-100);
-        color: var(--red-700);
+        background: var(--alert-100);
+        color: var(--alert-700);
       }
     }
 
@@ -738,7 +738,7 @@ import { TenantUser, TenantRole, UserTenantMembership } from '@shared/models';
 
       i {
         font-size: 2rem;
-        color: var(--text-color-secondary);
+        color: var(--text-secondary);
       }
     }
 
@@ -746,22 +746,22 @@ import { TenantUser, TenantRole, UserTenantMembership } from '@shared/models';
       margin: 0 0 0.5rem 0;
       font-size: 1.125rem;
       font-weight: 600;
-      color: var(--text-color);
+      color: var(--text-primary);
     }
 
     .empty-state p {
       margin: 0 0 1.5rem 0;
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
     }
 
     .list-footer {
       padding: 1rem 1.5rem;
-      border-top: 1px solid var(--surface-border);
+      border-top: 1px solid var(--border-color);
     }
 
     .user-count {
       font-size: 0.8125rem;
-      color: var(--text-color-secondary);
+      color: var(--text-secondary);
     }
 
     /* User Actions Menu */
@@ -796,7 +796,7 @@ import { TenantUser, TenantRole, UserTenantMembership } from '@shared/models';
       align-items: center;
       gap: 1rem;
       padding: 1.5rem;
-      border-bottom: 1px solid var(--surface-border);
+      border-bottom: 1px solid var(--border-color);
     }
 
     .dialog-icon {
@@ -825,13 +825,13 @@ import { TenantUser, TenantRole, UserTenantMembership } from '@shared/models';
         margin: 0 0 0.25rem 0;
         font-size: 1.125rem;
         font-weight: 600;
-        color: var(--text-color);
+        color: var(--text-primary);
       }
 
       p {
         margin: 0;
         font-size: 0.8125rem;
-        color: var(--text-color-secondary);
+        color: var(--text-secondary);
       }
     }
 
@@ -845,7 +845,7 @@ import { TenantUser, TenantRole, UserTenantMembership } from '@shared/models';
       gap: 0.75rem;
       padding: 1rem 1.5rem;
       background: var(--surface-ground);
-      border-top: 1px solid var(--surface-border);
+      border-top: 1px solid var(--border-color);
     }
 
     .form-field {
@@ -860,13 +860,13 @@ import { TenantUser, TenantRole, UserTenantMembership } from '@shared/models';
         margin-bottom: 0.5rem;
         font-size: 0.875rem;
         font-weight: 500;
-        color: var(--text-color);
+        color: var(--text-primary);
       }
     }
 
     .permissions-box {
       background: var(--surface-ground);
-      border: 1px solid var(--surface-border);
+      border: 1px solid var(--border-color);
       border-radius: 0.5rem;
       overflow: hidden;
       margin-top: 1rem;
@@ -878,10 +878,10 @@ import { TenantUser, TenantRole, UserTenantMembership } from '@shared/models';
       gap: 0.5rem;
       padding: 0.75rem 1rem;
       background: var(--surface-50);
-      border-bottom: 1px solid var(--surface-border);
+      border-bottom: 1px solid var(--border-color);
       font-size: 0.8125rem;
       font-weight: 600;
-      color: var(--text-color);
+      color: var(--text-primary);
 
       i {
         color: var(--primary-600);
@@ -899,7 +899,7 @@ import { TenantUser, TenantRole, UserTenantMembership } from '@shared/models';
         gap: 0.5rem;
         padding: 0.375rem 0;
         font-size: 0.8125rem;
-        color: var(--text-color-secondary);
+        color: var(--text-secondary);
 
         i {
           font-size: 0.75rem;
@@ -913,7 +913,7 @@ import { TenantUser, TenantRole, UserTenantMembership } from '@shared/models';
           }
 
           &.pi-times {
-            color: var(--red-500);
+            color: var(--alert-500);
           }
         }
       }
@@ -935,12 +935,12 @@ import { TenantUser, TenantRole, UserTenantMembership } from '@shared/models';
 
       .name {
         font-weight: 600;
-        color: var(--text-color);
+        color: var(--text-primary);
       }
 
       .email {
         font-size: 0.8125rem;
-        color: var(--text-color-secondary);
+        color: var(--text-secondary);
       }
     }
 
