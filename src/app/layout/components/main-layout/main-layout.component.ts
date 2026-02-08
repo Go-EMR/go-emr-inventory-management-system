@@ -20,6 +20,11 @@ interface NavItem {
   badge?: number;
 }
 
+interface NavGroup {
+  label: string;
+  items: NavItem[];
+}
+
 @Component({
   selector: 'app-main-layout',
   standalone: true,
@@ -71,28 +76,35 @@ interface NavItem {
         <!-- Navigation -->
         <nav class="sidebar-nav">
           <ul class="nav-list">
-            @for (item of navItems; track item.route) {
-              <li class="nav-item">
-                <a 
-                  [routerLink]="item.route"
-                  routerLinkActive="active"
-                  [routerLinkActiveOptions]="{ exact: item.route === '/dashboard' || item.route === '/vendors' }"
-                  class="nav-link"
-                  [pTooltip]="sidebarCollapsed() ? item.label : ''"
-                  tooltipPosition="right"
-                  pRipple
-                >
-                  <span class="nav-icon">
-                    <i [class]="'pi ' + item.icon"></i>
-                    @if (item.badge && item.badge > 0) {
-                      <span class="nav-badge">{{ item.badge > 9 ? '9+' : item.badge }}</span>
+            @for (group of navGroups; track group.label) {
+              @if (!sidebarCollapsed()) {
+                <li class="nav-group-label">{{ group.label }}</li>
+              } @else {
+                <li class="nav-group-divider"></li>
+              }
+              @for (item of group.items; track item.route) {
+                <li class="nav-item">
+                  <a
+                    [routerLink]="item.route"
+                    routerLinkActive="active"
+                    [routerLinkActiveOptions]="{ exact: item.route === '/dashboard' || item.route === '/vendors' }"
+                    class="nav-link"
+                    [pTooltip]="sidebarCollapsed() ? item.label : ''"
+                    tooltipPosition="right"
+                    pRipple
+                  >
+                    <span class="nav-icon">
+                      <i [class]="'pi ' + item.icon"></i>
+                      @if (item.badge && item.badge > 0) {
+                        <span class="nav-badge">{{ item.badge > 9 ? '9+' : item.badge }}</span>
+                      }
+                    </span>
+                    @if (!sidebarCollapsed()) {
+                      <span class="nav-label">{{ item.label }}</span>
                     }
-                  </span>
-                  @if (!sidebarCollapsed()) {
-                    <span class="nav-label">{{ item.label }}</span>
-                  }
-                </a>
-              </li>
+                  </a>
+                </li>
+              }
             }
           </ul>
         </nav>
@@ -322,6 +334,31 @@ interface NavItem {
       display: flex;
       flex-direction: column;
       gap: 0.25rem;
+    }
+
+    .nav-group-label {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-tertiary, #9ca3af);
+      padding: 1rem 1rem 0.375rem;
+      margin-top: 0.25rem;
+    }
+
+    .nav-group-label:first-child {
+      margin-top: 0;
+      padding-top: 0;
+    }
+
+    .nav-group-divider {
+      height: 1px;
+      background: var(--border-color);
+      margin: 0.5rem 0.75rem;
+    }
+
+    .nav-group-divider:first-child {
+      display: none;
     }
 
     .nav-link {
@@ -700,32 +737,72 @@ export class MainLayoutComponent {
   sidebarCollapsed = signal(false);
   mobileSidebarOpen = signal(false);
 
-  navItems: NavItem[] = [
-    { label: 'Dashboard', icon: 'pi-home', route: '/dashboard' },
-    { label: 'Help Desk', icon: 'pi-ticket', route: '/helpdesk' },
-    { label: 'Depreciation', icon: 'pi-chart-line', route: '/depreciation' },
-    { label: 'Equipment', icon: 'pi-box', route: '/equipment' },
-    { label: 'Inventory', icon: 'pi-database', route: '/inventory' },
-    { label: 'Lot Barcodes', icon: 'pi-qrcode', route: '/lot-barcodes' },
-    { label: 'Discards', icon: 'pi-trash', route: '/discards' },
-    { label: 'Checkouts', icon: 'pi-sign-out', route: '/checkouts' },
-    { label: 'Shipments', icon: 'pi-truck', route: '/shipments' },
-    { label: 'Returns', icon: 'pi-replay', route: '/returns' },
-    { label: 'Pick Lists', icon: 'pi-list-check', route: '/pick-lists' },
-    { label: 'Kits', icon: 'pi-objects-column', route: '/kits' },
-    { label: 'Purchase Orders', icon: 'pi-shopping-cart', route: '/purchase-orders' },
-    { label: 'Scanning', icon: 'pi-barcode', route: '/scanning' },
-    { label: 'Labels', icon: 'pi-tag', route: '/labels' },
-    { label: 'Alerts', icon: 'pi-bell', route: '/alerts' },
-    { label: 'Tags', icon: 'pi-hashtag', route: '/tags' },
-    { label: 'Maintenance', icon: 'pi-wrench', route: '/maintenance' },
-    { label: 'Vendors', icon: 'pi-building', route: '/vendors' },
-    { label: 'Vendor Performance', icon: 'pi-chart-line', route: '/vendors/performance' },
-    { label: 'Import/Export', icon: 'pi-upload', route: '/import-export' },
-    { label: 'Reports', icon: 'pi-chart-bar', route: '/reports' },
-    { label: 'Integrations', icon: 'pi-link', route: '/integrations' },
-    { label: 'Compliance', icon: 'pi-shield', route: '/compliance' },
-    { label: 'Audit Trail', icon: 'pi-history', route: '/audit-trail' }
+  navGroups: NavGroup[] = [
+    {
+      label: 'Overview',
+      items: [
+        { label: 'Dashboard', icon: 'pi-home', route: '/dashboard' },
+      ]
+    },
+    {
+      label: 'Asset Management',
+      items: [
+        { label: 'Equipment', icon: 'pi-box', route: '/equipment' },
+        { label: 'Inventory', icon: 'pi-database', route: '/inventory' },
+        { label: 'Kits', icon: 'pi-objects-column', route: '/kits' },
+        { label: 'Labels', icon: 'pi-tag', route: '/labels' },
+        { label: 'Tags', icon: 'pi-hashtag', route: '/tags' },
+        { label: 'Lot Barcodes', icon: 'pi-qrcode', route: '/lot-barcodes' },
+      ]
+    },
+    {
+      label: 'Operations',
+      items: [
+        { label: 'Scanning', icon: 'pi-barcode', route: '/scanning' },
+        { label: 'Checkouts', icon: 'pi-sign-out', route: '/checkouts' },
+        { label: 'Returns', icon: 'pi-replay', route: '/returns' },
+        { label: 'Pick Lists', icon: 'pi-list-check', route: '/pick-lists' },
+        { label: 'Shipments', icon: 'pi-truck', route: '/shipments' },
+      ]
+    },
+    {
+      label: 'Procurement',
+      items: [
+        { label: 'Purchase Orders', icon: 'pi-shopping-cart', route: '/purchase-orders' },
+        { label: 'Vendors', icon: 'pi-building', route: '/vendors' },
+        { label: 'Vendor Performance', icon: 'pi-chart-line', route: '/vendors/performance' },
+      ]
+    },
+    {
+      label: 'Lifecycle',
+      items: [
+        { label: 'Maintenance', icon: 'pi-wrench', route: '/maintenance' },
+        { label: 'Depreciation', icon: 'pi-chart-line', route: '/depreciation' },
+        { label: 'Discards', icon: 'pi-trash', route: '/discards' },
+      ]
+    },
+    {
+      label: 'Support & Alerts',
+      items: [
+        { label: 'Alerts', icon: 'pi-bell', route: '/alerts' },
+        { label: 'Help Desk', icon: 'pi-ticket', route: '/helpdesk' },
+      ]
+    },
+    {
+      label: 'Reporting & Compliance',
+      items: [
+        { label: 'Reports', icon: 'pi-chart-bar', route: '/reports' },
+        { label: 'Compliance', icon: 'pi-shield', route: '/compliance' },
+        { label: 'Audit Trail', icon: 'pi-history', route: '/audit-trail' },
+      ]
+    },
+    {
+      label: 'System',
+      items: [
+        { label: 'Import/Export', icon: 'pi-upload', route: '/import-export' },
+        { label: 'Integrations', icon: 'pi-link', route: '/integrations' },
+      ]
+    },
   ];
 
   unreadAlerts = computed(() => 
@@ -738,19 +815,15 @@ export class MainLayoutComponent {
     return `${user.firstName[0]}${user.lastName[0]}`;
   });
 
-  // Update nav items with badges
   constructor() {
-    // This would typically be done with computed properties
     const stats = this.mockDataService.dashboardStats();
-    this.navItems = this.navItems.map(item => {
-      if (item.route === '/maintenance') {
-        return { ...item, badge: stats.overdueMaintenances };
-      }
-      if (item.route === '/inventory') {
-        return { ...item, badge: stats.lowStockItems };
-      }
-      return item;
-    });
+    for (const group of this.navGroups) {
+      group.items = group.items.map(item => {
+        if (item.route === '/maintenance') return { ...item, badge: stats.overdueMaintenances };
+        if (item.route === '/inventory') return { ...item, badge: stats.lowStockItems };
+        return item;
+      });
+    }
   }
 
   toggleSidebar(): void {
