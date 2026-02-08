@@ -11,7 +11,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { DialogModule } from 'primeng/dialog';
 import { ToastModule } from 'primeng/toast';
 import { TabsModule } from 'primeng/tabs';
-import { CalendarModule } from 'primeng/calendar';
+import { DatePickerModule } from 'primeng/datepicker';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { MessageService } from 'primeng/api';
@@ -41,7 +41,7 @@ import {
     DialogModule,
     ToastModule,
     TabsModule,
-    CalendarModule,
+    DatePickerModule,
     IconFieldModule,
     InputIconModule
   ],
@@ -1070,9 +1070,9 @@ export class MaintenanceListComponent {
   }
 
   formatCurrency(amount: number): string {
-    return new Intl.NumberFormat('en-US', {
+    return new Intl.NumberFormat('en-IN', {
       style: 'currency',
-      currency: 'USD'
+      currency: 'INR'
     }).format(amount);
   }
 

@@ -1,0 +1,16 @@
+{
+  "name": "goemr-mock-server",
+  "version": "1.0.0",
+  "description": "json-server mock backend for GoEMR Inventory Management System",
+  "private": true,
+  "scripts": {
+    "seed": "node seed.js",
+    "start": "node seed.js && node server.js",
+    "server": "node server.js"
+  },
+  "dependencies": {
+    "json-server": "0.17.4",
+    "jsonwebtoken": "^9.0.2",
+    "uuid": "^9.0.1"
+  }
+}

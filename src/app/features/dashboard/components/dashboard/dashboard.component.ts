@@ -141,7 +141,7 @@ import {
             </div>
           </div>
           <div class="chart-container chart-container--bar">
-            <p-chart type="bar" [data]="maintenanceChart()" [options]="barOptions"></p-chart>
+            <p-chart type="bar" [data]="maintenanceChart()" [options]="barOptions()"></p-chart>
           </div>
         </section>
 
@@ -574,45 +574,35 @@ import {
       display: flex;
       align-items: center;
       justify-content: center;
-      
+      overflow: hidden;
+    }
+
+    /* Doughnut chart specific */
+    .chart-container--doughnut {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-4);
+
       :host ::ng-deep {
-        p-chart {
-          width: 100%;
-          height: 100%;
+        p-chart,
+        .p-chart {
           display: flex;
           align-items: center;
           justify-content: center;
         }
-        
+
         canvas {
-          max-width: 100%;
-          max-height: 100%;
-        }
-      }
-    }
-    
-    /* Doughnut chart specific */
-    .chart-container--doughnut {
-      height: 220px;
-      padding: var(--space-3) var(--space-4);
-      
-      :host ::ng-deep {
-        p-chart {
-          width: 180px !important;
-          height: 180px !important;
-        }
-        
-        canvas {
-          width: 180px !important;
-          height: 180px !important;
+          max-width: 160px;
+          max-height: 160px;
         }
       }
     }
 
     .chart-container--bar {
-      height: 300px;
+      height: 280px;
       padding: var(--space-3) var(--space-4);
-      
+
       :host ::ng-deep {
         p-chart {
           width: 100%;
@@ -1120,9 +1110,9 @@ export class DashboardComponent {
   }));
 
   doughnutOptions = {
-    cutout: '60%',
-    responsive: true,
-    maintainAspectRatio: true,
+    cutout: '65%',
+    responsive: false,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         display: false
@@ -1130,48 +1120,57 @@ export class DashboardComponent {
     }
   };
 
-  barOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: 'bottom' as const,
-        labels: {
-          usePointStyle: true,
-          padding: 16,
-          font: {
-            size: 12
-          }
-        }
-      }
-    },
-    scales: {
-      x: {
-        grid: {
-          display: false
-        },
-        ticks: {
-          font: {
-            size: 11
+  barOptions = computed(() => {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const textColor = isDark ? '#a1a1aa' : '#71717a';
+    const gridColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.08)';
+
+    return {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'bottom' as const,
+          labels: {
+            usePointStyle: true,
+            padding: 20,
+            color: textColor,
+            font: {
+              size: 12
+            }
           }
         }
       },
-      y: {
-        beginAtZero: true,
-        grid: {
-          color: 'rgba(0, 0, 0, 0.05)'
-        },
-        ticks: {
-          font: {
-            size: 11
+      scales: {
+        x: {
+          grid: {
+            display: false
           },
-          stepSize: 2
+          ticks: {
+            color: textColor,
+            font: {
+              size: 11
+            }
+          }
+        },
+        y: {
+          beginAtZero: true,
+          grid: {
+            color: gridColor
+          },
+          ticks: {
+            color: textColor,
+            font: {
+              size: 11
+            },
+            stepSize: 2
+          }
         }
-      }
-    },
-    barPercentage: 0.7,
-    categoryPercentage: 0.8
-  };
+      },
+      barPercentage: 0.7,
+      categoryPercentage: 0.8
+    };
+  });
 
   getStatusSeverity(status: EquipmentStatus): 'success' | 'info' | 'warn' | 'danger' | 'secondary' {
     const map: Record<EquipmentStatus, 'success' | 'info' | 'warn' | 'danger' | 'secondary'> = {

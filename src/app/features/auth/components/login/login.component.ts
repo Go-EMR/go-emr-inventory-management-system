@@ -294,12 +294,13 @@ import { UserRole } from '@shared/models';
             <!-- MFA Form -->
             <form (ngSubmit)="onVerifyMfa()" class="login-form mfa-form">
               <div class="mfa-code-container">
-                <p-inputOtp 
-                  [(ngModel)]="mfaCode" 
+                <p-inputOtp
+                  [(ngModel)]="mfaCode"
                   name="mfaCode"
                   [length]="6"
                   [integerOnly]="true"
                   styleClass="mfa-otp"
+                  (ngModelChange)="onMfaCodeChange($event)"
                 />
               </div>
 
@@ -1050,7 +1051,16 @@ export class LoginComponent {
     this.startResendCooldown();
   }
 
+  onMfaCodeChange(code: string): void {
+    // Auto-verify when all 6 digits are entered
+    if (code && code.length === 6 && !this.verifyingMfa()) {
+      this.onVerifyMfa();
+    }
+  }
+
   async onVerifyMfa(): Promise<void> {
+    if (this.verifyingMfa()) return; // Prevent double submission
+
     this.mfaError.set(null);
     this.verifyingMfa.set(true);
 

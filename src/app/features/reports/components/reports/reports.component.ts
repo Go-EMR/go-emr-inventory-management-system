@@ -8,7 +8,7 @@ import { ChartModule } from 'primeng/chart';
 import { TableModule } from 'primeng/table';
 import { TabsModule } from 'primeng/tabs';
 import { TagModule } from 'primeng/tag';
-import { CalendarModule } from 'primeng/calendar';
+import { DatePickerModule } from 'primeng/datepicker';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { MockDataService } from '@core/services/mock-data.service';
@@ -36,7 +36,7 @@ import {
     TableModule,
     TabsModule,
     TagModule,
-    CalendarModule,
+    DatePickerModule,
     ToastModule
   ],
   providers: [MessageService],
@@ -1263,9 +1263,9 @@ export class ReportsComponent implements OnInit {
   }
 
   formatCurrency(amount: number): string {
-    return new Intl.NumberFormat('en-US', {
+    return new Intl.NumberFormat('en-IN', {
       style: 'currency',
-      currency: 'USD',
+      currency: 'INR',
       minimumFractionDigits: 0,
       maximumFractionDigits: 0
     }).format(amount);

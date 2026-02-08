@@ -947,9 +947,9 @@ export class EquipmentDetailComponent implements OnInit {
 
   formatCurrency(amount: number | undefined): string {
     if (amount === undefined) return 'N/A';
-    return new Intl.NumberFormat('en-US', {
+    return new Intl.NumberFormat('en-IN', {
       style: 'currency',
-      currency: 'USD'
+      currency: 'INR'
     }).format(amount);
   }
 

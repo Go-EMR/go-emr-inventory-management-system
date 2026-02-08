@@ -9,7 +9,7 @@ import { TagModule } from 'primeng/tag';
 import { TooltipModule } from 'primeng/tooltip';
 import { DialogModule } from 'primeng/dialog';
 import { ToastModule } from 'primeng/toast';
-import { CalendarModule } from 'primeng/calendar';
+import { DatePickerModule } from 'primeng/datepicker';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { CardModule } from 'primeng/card';
@@ -38,7 +38,7 @@ import {
     TooltipModule,
     DialogModule,
     ToastModule,
-    CalendarModule,
+    DatePickerModule,
     IconFieldModule,
     InputIconModule,
     CardModule,
@@ -118,14 +118,14 @@ import {
             class="filter-select">
           </p-select>
           
-          <p-calendar 
+          <p-datepicker 
             [(ngModel)]="dateRange"
             selectionMode="range"
             [showIcon]="true"
             placeholder="Date Range"
             dateFormat="mm/dd/yy"
             class="date-filter">
-          </p-calendar>
+          </p-datepicker>
         </div>
         
         <div class="filters-right">

@@ -1,7 +1,7 @@
 import { Injectable, signal, computed, inject, PLATFORM_ID } from '@angular/core';
 import { Router } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
-import { User, UserRole } from '@shared/models';
+import { User, UserRole, TenantRole, UserTenantMembership } from '@shared/models';
 
 export interface LoginCredentials {
   username: string;
@@ -14,6 +14,10 @@ export interface AuthState {
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
+}
+
+export interface UserWithMemberships extends User {
+  tenantMemberships?: UserTenantMembership[];
 }
 
 @Injectable({
@@ -43,12 +47,13 @@ export class AuthService {
     return user ? `${user.firstName} ${user.lastName}` : '';
   });
   
-  // Demo users for different roles
-  private readonly demoUsers: Record<string, { password: string; user: User }> = {
+  // Demo users for different roles with tenant memberships
+  private readonly demoUsers: Record<string, { password: string; user: UserWithMemberships }> = {
     'admin': {
       password: 'admin123',
       user: {
         id: '1',
+        tenantId: 'tenant-1',
         username: 'admin',
         email: 'admin@goemr.com',
         firstName: 'System',
@@ -56,13 +61,19 @@ export class AuthService {
         role: UserRole.ADMIN,
         department: 'IT',
         isActive: true,
-        createdAt: new Date('2024-01-01')
+        createdAt: new Date('2024-01-01'),
+        tenantMemberships: [
+          { id: 'mem-1', userId: '1', tenantId: 'tenant-1', tenantName: 'GoEMR Demo Hospital', tenantSlug: 'goemr-demo', role: TenantRole.SUPER_ADMIN, isDefault: true, status: 'active', createdAt: new Date('2024-01-01'), updatedAt: new Date('2024-01-01') },
+          { id: 'mem-2', userId: '1', tenantId: 'tenant-2', tenantName: 'Metro General Hospital', tenantSlug: 'metro-general', role: TenantRole.TENANT_ADMIN, isDefault: false, status: 'active', createdAt: new Date('2024-01-01'), updatedAt: new Date('2024-01-01') },
+          { id: 'mem-3', userId: '1', tenantId: 'tenant-3', tenantName: 'City Medical Center', tenantSlug: 'city-medical', role: TenantRole.VIEWER, isDefault: false, status: 'active', createdAt: new Date('2024-01-01'), updatedAt: new Date('2024-01-01') }
+        ]
       }
     },
     'manager': {
       password: 'manager123',
       user: {
         id: '2',
+        tenantId: 'tenant-1',
         username: 'manager',
         email: 'manager@goemr.com',
         firstName: 'Sarah',
@@ -70,13 +81,17 @@ export class AuthService {
         role: UserRole.MANAGER,
         department: 'Biomedical Engineering',
         isActive: true,
-        createdAt: new Date('2024-01-15')
+        createdAt: new Date('2024-01-15'),
+        tenantMemberships: [
+          { id: 'mem-4', userId: '2', tenantId: 'tenant-1', tenantName: 'GoEMR Demo Hospital', tenantSlug: 'goemr-demo', role: TenantRole.MANAGER, isDefault: true, status: 'active', createdAt: new Date('2024-01-15'), updatedAt: new Date('2024-01-15') }
+        ]
       }
     },
     'technician': {
       password: 'tech123',
       user: {
         id: '3',
+        tenantId: 'tenant-1',
         username: 'technician',
         email: 'technician@goemr.com',
         firstName: 'Michael',
@@ -84,13 +99,18 @@ export class AuthService {
         role: UserRole.TECHNICIAN,
         department: 'Maintenance',
         isActive: true,
-        createdAt: new Date('2024-02-01')
+        createdAt: new Date('2024-02-01'),
+        tenantMemberships: [
+          { id: 'mem-5', userId: '3', tenantId: 'tenant-1', tenantName: 'GoEMR Demo Hospital', tenantSlug: 'goemr-demo', role: TenantRole.STAFF, isDefault: true, status: 'active', createdAt: new Date('2024-02-01'), updatedAt: new Date('2024-02-01') },
+          { id: 'mem-6', userId: '3', tenantId: 'tenant-2', tenantName: 'Metro General Hospital', tenantSlug: 'metro-general', role: TenantRole.STAFF, isDefault: false, status: 'active', createdAt: new Date('2024-02-01'), updatedAt: new Date('2024-02-01') }
+        ]
       }
     },
     'viewer': {
       password: 'viewer123',
       user: {
         id: '4',
+        tenantId: 'tenant-1',
         username: 'viewer',
         email: 'viewer@goemr.com',
         firstName: 'Emily',
@@ -98,7 +118,10 @@ export class AuthService {
         role: UserRole.VIEWER,
         department: 'Operations',
         isActive: true,
-        createdAt: new Date('2024-02-15')
+        createdAt: new Date('2024-02-15'),
+        tenantMemberships: [
+          { id: 'mem-7', userId: '4', tenantId: 'tenant-1', tenantName: 'GoEMR Demo Hospital', tenantSlug: 'goemr-demo', role: TenantRole.VIEWER, isDefault: true, status: 'active', createdAt: new Date('2024-02-15'), updatedAt: new Date('2024-02-15') }
+        ]
       }
     }
   };
@@ -192,10 +215,53 @@ export class AuthService {
       [UserRole.TECHNICIAN]: 'technician',
       [UserRole.VIEWER]: 'viewer'
     };
-    
+
     const username = roleMap[role];
     const password = this.demoUsers[username].password;
-    
+
     return this.login({ username, password, rememberMe: false });
+  }
+
+  // Get tenant memberships for the current user
+  getTenantMemberships(): UserTenantMembership[] {
+    const user = this._user() as UserWithMemberships | null;
+    return user?.tenantMemberships || [];
+  }
+
+  // Check if user has a specific tenant role
+  hasTenantRole(tenantId: string, role: TenantRole): boolean {
+    const memberships = this.getTenantMemberships();
+    const membership = memberships.find(m => m.tenantId === tenantId);
+    return membership?.role === role;
+  }
+
+  // Check if user has any of the specified tenant roles
+  hasAnyTenantRole(tenantId: string, roles: TenantRole[]): boolean {
+    const memberships = this.getTenantMemberships();
+    const membership = memberships.find(m => m.tenantId === tenantId);
+    return membership ? roles.includes(membership.role) : false;
+  }
+
+  // Check if user is at least a manager in the tenant (manager, tenant_admin, or super_admin)
+  isTenantManagerOrAbove(tenantId: string): boolean {
+    return this.hasAnyTenantRole(tenantId, [
+      TenantRole.MANAGER,
+      TenantRole.TENANT_ADMIN,
+      TenantRole.SUPER_ADMIN
+    ]);
+  }
+
+  // Check if user is a tenant admin or super admin
+  isTenantAdminOrAbove(tenantId: string): boolean {
+    return this.hasAnyTenantRole(tenantId, [
+      TenantRole.TENANT_ADMIN,
+      TenantRole.SUPER_ADMIN
+    ]);
+  }
+
+  // Check if user is a super admin in any tenant
+  isSuperAdmin(): boolean {
+    const memberships = this.getTenantMemberships();
+    return memberships.some(m => m.role === TenantRole.SUPER_ADMIN);
   }
 }

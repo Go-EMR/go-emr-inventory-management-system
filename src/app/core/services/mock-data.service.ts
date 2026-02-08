@@ -1,4 +1,4 @@
-import { Injectable, signal, computed } from '@angular/core';
+import { Injectable, signal, computed, inject } from '@angular/core';
 import {
   Equipment,
   EquipmentType,
@@ -32,43 +32,75 @@ import {
   providedIn: 'root'
 })
 export class MockDataService {
-  
+
+  // Current tenant ID for filtering - set by TenantService
+  private currentTenantId = signal<string>('tenant-1');
+
   // Equipment Data
   private readonly _equipment = signal<Equipment[]>(this.generateEquipmentData());
-  readonly equipment = this._equipment.asReadonly();
-  
+  readonly equipment = computed(() =>
+    this._equipment().filter(e => e.tenantId === this.currentTenantId())
+  );
+
   // Inventory Data
   private readonly _inventory = signal<InventoryItem[]>(this.generateInventoryData());
-  readonly inventory = this._inventory.asReadonly();
-  
+  readonly inventory = computed(() =>
+    this._inventory().filter(i => i.tenantId === this.currentTenantId())
+  );
+
   // Maintenance Records
   private readonly _maintenanceRecords = signal<MaintenanceRecord[]>(this.generateMaintenanceData());
-  readonly maintenanceRecords = this._maintenanceRecords.asReadonly();
-  
+  readonly maintenanceRecords = computed(() =>
+    this._maintenanceRecords().filter(m => m.tenantId === this.currentTenantId())
+  );
+
   // Work Orders
   private readonly _workOrders = signal<WorkOrder[]>(this.generateWorkOrderData());
-  readonly workOrders = this._workOrders.asReadonly();
-  
+  readonly workOrders = computed(() =>
+    this._workOrders().filter(w => w.tenantId === this.currentTenantId())
+  );
+
   // Vendors
   private readonly _vendors = signal<Vendor[]>(this.generateVendorData());
-  readonly vendors = this._vendors.asReadonly();
-  
+  readonly vendors = computed(() =>
+    this._vendors().filter(v => v.tenantId === this.currentTenantId())
+  );
+
   // Alerts
   private readonly _alerts = signal<Alert[]>(this.generateAlertData());
-  readonly alerts = this._alerts.asReadonly();
-  
+  readonly alerts = computed(() =>
+    this._alerts().filter(a => a.tenantId === this.currentTenantId())
+  );
+
   // Audit Logs
   private readonly _auditLogs = signal<AuditLog[]>(this.generateAuditLogData());
   readonly auditLogs = this._auditLogs.asReadonly();
+
+  // Set the current tenant for data filtering
+  setCurrentTenant(tenantId: string): void {
+    this.currentTenantId.set(tenantId);
+  }
+
+  getCurrentTenantId(): string {
+    return this.currentTenantId();
+  }
   
-  // Dashboard Stats
+  // Dashboard Stats - filtered by current tenant
   readonly dashboardStats = computed<DashboardStats>(() => {
-    const equipment = this._equipment();
-    const inventory = this._inventory();
-    const workOrders = this._workOrders();
-    const maintenanceRecords = this._maintenanceRecords();
-    const alerts = this._alerts();
-    
+    const tenantId = this.currentTenantId();
+    const equipment = this._equipment().filter(e => e.tenantId === tenantId);
+    const inventory = this._inventory().filter(i => i.tenantId === tenantId);
+    const workOrders = this._workOrders().filter(w => w.tenantId === tenantId);
+    const maintenanceRecords = this._maintenanceRecords().filter(m => m.tenantId === tenantId);
+    const alerts = this._alerts().filter(a => a.tenantId === tenantId);
+
+    // Calculate monthly maintenance cost based on tenant
+    const maintenanceCostByTenant: Record<string, number> = {
+      'tenant-1': 45750,
+      'tenant-2': 38500,
+      'tenant-4': 125000
+    };
+
     return {
       totalEquipment: equipment.length,
       activeEquipment: equipment.filter(e => e.status === EquipmentStatus.IN_SERVICE).length,
@@ -79,7 +111,7 @@ export class MockDataService {
       pendingWorkOrders: workOrders.filter(w => w.status === WorkOrderStatus.OPEN || w.status === WorkOrderStatus.IN_PROGRESS).length,
       overdueMaintenances: maintenanceRecords.filter(m => m.status === MaintenanceStatus.OVERDUE).length,
       alertsCount: alerts.filter(a => !a.isRead).length,
-      monthlyMaintenanceCost: 45750
+      monthlyMaintenanceCost: maintenanceCostByTenant[tenantId] || 50000
     };
   });
   
@@ -87,6 +119,7 @@ export class MockDataService {
     return [
       {
         id: 'EQ001',
+        tenantId: 'tenant-1',
         inventoryNumber: 'MED-2024-001',
         name: 'Portable X-Ray System',
         type: EquipmentType.IMAGING,
@@ -114,6 +147,7 @@ export class MockDataService {
       },
       {
         id: 'EQ002',
+        tenantId: 'tenant-1',
         inventoryNumber: 'MED-2024-002',
         name: 'Patient Monitor - ICU',
         type: EquipmentType.MONITORING,
@@ -141,6 +175,7 @@ export class MockDataService {
       },
       {
         id: 'EQ003',
+        tenantId: 'tenant-1',
         inventoryNumber: 'MED-2024-003',
         name: 'Ventilator',
         type: EquipmentType.LIFE_SUPPORT,
@@ -168,6 +203,7 @@ export class MockDataService {
       },
       {
         id: 'EQ004',
+        tenantId: 'tenant-1',
         inventoryNumber: 'MED-2024-004',
         name: 'Defibrillator',
         type: EquipmentType.THERAPEUTIC,
@@ -195,6 +231,7 @@ export class MockDataService {
       },
       {
         id: 'EQ005',
+        tenantId: 'tenant-1',
         inventoryNumber: 'MED-2024-005',
         name: 'Ultrasound System',
         type: EquipmentType.DIAGNOSTIC,
@@ -222,6 +259,7 @@ export class MockDataService {
       },
       {
         id: 'EQ006',
+        tenantId: 'tenant-1',
         inventoryNumber: 'MED-2024-006',
         name: 'Infusion Pump',
         type: EquipmentType.THERAPEUTIC,
@@ -249,6 +287,7 @@ export class MockDataService {
       },
       {
         id: 'EQ007',
+        tenantId: 'tenant-1',
         inventoryNumber: 'MED-2024-007',
         name: 'Anesthesia Machine',
         type: EquipmentType.LIFE_SUPPORT,
@@ -276,6 +315,7 @@ export class MockDataService {
       },
       {
         id: 'EQ008',
+        tenantId: 'tenant-1',
         inventoryNumber: 'MED-2024-008',
         name: 'ECG Machine',
         type: EquipmentType.DIAGNOSTIC,
@@ -304,6 +344,7 @@ export class MockDataService {
       },
       {
         id: 'EQ009',
+        tenantId: 'tenant-1',
         inventoryNumber: 'MED-2024-009',
         name: 'Laboratory Centrifuge',
         type: EquipmentType.LABORATORY,
@@ -331,6 +372,7 @@ export class MockDataService {
       },
       {
         id: 'EQ010',
+        tenantId: 'tenant-1',
         inventoryNumber: 'MED-2024-010',
         name: 'Autoclave',
         type: EquipmentType.STERILIZATION,
@@ -355,6 +397,402 @@ export class MockDataService {
         serviceManualAvailable: true,
         createdAt: new Date('2022-08-15'),
         updatedAt: new Date('2024-11-20')
+      },
+      // ============ Sunrise Medical Center (tenant-2) Equipment ============
+      {
+        id: 'EQ-SMC-001',
+        tenantId: 'tenant-2',
+        inventoryNumber: 'SMC-2024-001',
+        name: 'CT Scanner',
+        type: EquipmentType.IMAGING,
+        category: EquipmentCategory.MONITORING_SURGICAL_ICU,
+        manufacturer: 'Siemens Healthineers',
+        model: 'SOMATOM go.Top',
+        serialNumber: 'CT-SMC-2024-A001',
+        location: { id: 'SMC-L1', building: 'Main Building', floor: '1', room: 'CT Suite' },
+        department: 'Radiology',
+        status: EquipmentStatus.IN_SERVICE,
+        condition: EquipmentCondition.EXCELLENT,
+        riskLevel: RiskLevel.HIGH,
+        purchaseDate: new Date('2024-01-15'),
+        installationDate: new Date('2024-02-01'),
+        warrantyExpiry: new Date('2027-01-15'),
+        lastMaintenanceDate: new Date('2024-11-15'),
+        nextMaintenanceDate: new Date('2025-02-15'),
+        purchaseCost: 850000,
+        currentValue: 810000,
+        powerRequirements: '480V, 100A',
+        operatingManualAvailable: true,
+        serviceManualAvailable: true,
+        createdAt: new Date('2024-01-15'),
+        updatedAt: new Date('2024-11-15')
+      },
+      {
+        id: 'EQ-SMC-002',
+        tenantId: 'tenant-2',
+        inventoryNumber: 'SMC-2024-002',
+        name: 'Digital Mammography System',
+        type: EquipmentType.IMAGING,
+        category: EquipmentCategory.MONITORING_PHYSIOLOGICAL,
+        manufacturer: 'Hologic',
+        model: 'Selenia Dimensions',
+        serialNumber: 'MAM-SMC-2024-B002',
+        location: { id: 'SMC-L2', building: 'Women\'s Center', floor: '2', room: 'Imaging Suite 1' },
+        department: 'Radiology',
+        status: EquipmentStatus.IN_SERVICE,
+        condition: EquipmentCondition.GOOD,
+        riskLevel: RiskLevel.MEDIUM,
+        purchaseDate: new Date('2023-05-20'),
+        installationDate: new Date('2023-06-01'),
+        warrantyExpiry: new Date('2026-05-20'),
+        lastMaintenanceDate: new Date('2024-12-01'),
+        nextMaintenanceDate: new Date('2025-03-01'),
+        purchaseCost: 320000,
+        currentValue: 280000,
+        powerRequirements: '220V, 30A',
+        operatingManualAvailable: true,
+        serviceManualAvailable: true,
+        createdAt: new Date('2023-05-20'),
+        updatedAt: new Date('2024-12-01')
+      },
+      {
+        id: 'EQ-SMC-003',
+        tenantId: 'tenant-2',
+        inventoryNumber: 'SMC-2024-003',
+        name: 'Cardiac Catheterization Lab',
+        type: EquipmentType.THERAPEUTIC,
+        category: EquipmentCategory.SURGICAL_ICU,
+        manufacturer: 'Philips Healthcare',
+        model: 'Azurion 7 C20',
+        serialNumber: 'CATH-SMC-2024-C003',
+        location: { id: 'SMC-L3', building: 'Heart Center', floor: '3', room: 'Cath Lab 1' },
+        department: 'Cardiology',
+        status: EquipmentStatus.IN_SERVICE,
+        condition: EquipmentCondition.EXCELLENT,
+        riskLevel: RiskLevel.HIGH,
+        purchaseDate: new Date('2023-09-01'),
+        installationDate: new Date('2023-10-01'),
+        warrantyExpiry: new Date('2026-09-01'),
+        lastMaintenanceDate: new Date('2024-10-15'),
+        nextMaintenanceDate: new Date('2025-01-15'),
+        purchaseCost: 1200000,
+        currentValue: 1100000,
+        powerRequirements: '480V, 150A',
+        operatingManualAvailable: true,
+        serviceManualAvailable: true,
+        createdAt: new Date('2023-09-01'),
+        updatedAt: new Date('2024-10-15')
+      },
+      {
+        id: 'EQ-SMC-004',
+        tenantId: 'tenant-2',
+        inventoryNumber: 'SMC-2024-004',
+        name: 'Dialysis Machine',
+        type: EquipmentType.THERAPEUTIC,
+        category: EquipmentCategory.LIFE_SUPPORT,
+        manufacturer: 'Fresenius',
+        model: '5008S CorDiax',
+        serialNumber: 'DIA-SMC-2024-D004',
+        location: { id: 'SMC-L4', building: 'Main Building', floor: '2', room: 'Dialysis Unit' },
+        department: 'Nephrology',
+        status: EquipmentStatus.UNDER_MAINTENANCE,
+        condition: EquipmentCondition.FAIR,
+        riskLevel: RiskLevel.HIGH,
+        purchaseDate: new Date('2022-03-15'),
+        installationDate: new Date('2022-04-01'),
+        warrantyExpiry: new Date('2024-03-15'),
+        lastMaintenanceDate: new Date('2025-01-20'),
+        nextMaintenanceDate: new Date('2025-04-20'),
+        purchaseCost: 45000,
+        currentValue: 32000,
+        powerRequirements: '220V, 20A',
+        operatingManualAvailable: true,
+        serviceManualAvailable: true,
+        notes: 'Undergoing pump replacement',
+        createdAt: new Date('2022-03-15'),
+        updatedAt: new Date('2025-01-20')
+      },
+      {
+        id: 'EQ-SMC-005',
+        tenantId: 'tenant-2',
+        inventoryNumber: 'SMC-2024-005',
+        name: 'Surgical Microscope',
+        type: EquipmentType.DIAGNOSTIC,
+        category: EquipmentCategory.SURGICAL_ICU,
+        manufacturer: 'Zeiss',
+        model: 'OPMI Pentero 900',
+        serialNumber: 'MIC-SMC-2024-E005',
+        location: { id: 'SMC-L5', building: 'Surgery Center', floor: '3', room: 'OR Suite 2' },
+        department: 'Surgery',
+        status: EquipmentStatus.IN_SERVICE,
+        condition: EquipmentCondition.GOOD,
+        riskLevel: RiskLevel.MEDIUM,
+        purchaseDate: new Date('2023-07-01'),
+        installationDate: new Date('2023-07-15'),
+        warrantyExpiry: new Date('2026-07-01'),
+        lastMaintenanceDate: new Date('2024-09-01'),
+        nextMaintenanceDate: new Date('2025-03-01'),
+        purchaseCost: 425000,
+        currentValue: 380000,
+        powerRequirements: '220V, 15A',
+        operatingManualAvailable: true,
+        serviceManualAvailable: true,
+        createdAt: new Date('2023-07-01'),
+        updatedAt: new Date('2024-09-01')
+      },
+      {
+        id: 'EQ-SMC-006',
+        tenantId: 'tenant-2',
+        inventoryNumber: 'SMC-2024-006',
+        name: 'Blood Gas Analyzer',
+        type: EquipmentType.LABORATORY,
+        category: EquipmentCategory.LABORATORY_ANALYTICAL,
+        manufacturer: 'Radiometer',
+        model: 'ABL90 FLEX PLUS',
+        serialNumber: 'BGA-SMC-2024-F006',
+        location: { id: 'SMC-L6', building: 'Main Building', floor: '1', room: 'Lab Room 102' },
+        department: 'Laboratory',
+        status: EquipmentStatus.IN_SERVICE,
+        condition: EquipmentCondition.EXCELLENT,
+        riskLevel: RiskLevel.LOW,
+        purchaseDate: new Date('2024-04-01'),
+        installationDate: new Date('2024-04-10'),
+        warrantyExpiry: new Date('2027-04-01'),
+        lastMaintenanceDate: new Date('2024-12-15'),
+        nextMaintenanceDate: new Date('2025-03-15'),
+        purchaseCost: 38000,
+        currentValue: 36000,
+        powerRequirements: '110V, 10A',
+        operatingManualAvailable: true,
+        serviceManualAvailable: false,
+        createdAt: new Date('2024-04-01'),
+        updatedAt: new Date('2024-12-15')
+      },
+      // ============ Riverside Community Hospital (tenant-4) Equipment ============
+      {
+        id: 'EQ-RCH-001',
+        tenantId: 'tenant-4',
+        inventoryNumber: 'RCH-2024-001',
+        name: 'MRI Scanner 3T',
+        type: EquipmentType.IMAGING,
+        category: EquipmentCategory.MONITORING_SURGICAL_ICU,
+        manufacturer: 'GE Healthcare',
+        model: 'SIGNA Premier',
+        serialNumber: 'MRI-RCH-2024-A001',
+        location: { id: 'RCH-L1', building: 'Imaging Center', floor: '1', room: 'MRI Suite A' },
+        department: 'Radiology',
+        status: EquipmentStatus.IN_SERVICE,
+        condition: EquipmentCondition.EXCELLENT,
+        riskLevel: RiskLevel.HIGH,
+        purchaseDate: new Date('2023-03-01'),
+        installationDate: new Date('2023-04-15'),
+        warrantyExpiry: new Date('2028-03-01'),
+        lastMaintenanceDate: new Date('2024-12-01'),
+        nextMaintenanceDate: new Date('2025-03-01'),
+        purchaseCost: 2500000,
+        currentValue: 2300000,
+        powerRequirements: '480V, 200A',
+        operatingManualAvailable: true,
+        serviceManualAvailable: true,
+        createdAt: new Date('2023-03-01'),
+        updatedAt: new Date('2024-12-01')
+      },
+      {
+        id: 'EQ-RCH-002',
+        tenantId: 'tenant-4',
+        inventoryNumber: 'RCH-2024-002',
+        name: 'Linear Accelerator',
+        type: EquipmentType.THERAPEUTIC,
+        category: EquipmentCategory.SURGICAL_ICU,
+        manufacturer: 'Varian',
+        model: 'TrueBeam',
+        serialNumber: 'LINAC-RCH-2024-B002',
+        location: { id: 'RCH-L2', building: 'Cancer Center', floor: '-1', room: 'Radiation Vault 1' },
+        department: 'Oncology',
+        status: EquipmentStatus.IN_SERVICE,
+        condition: EquipmentCondition.EXCELLENT,
+        riskLevel: RiskLevel.HIGH,
+        purchaseDate: new Date('2022-08-01'),
+        installationDate: new Date('2022-10-01'),
+        warrantyExpiry: new Date('2027-08-01'),
+        lastMaintenanceDate: new Date('2024-11-01'),
+        nextMaintenanceDate: new Date('2025-02-01'),
+        purchaseCost: 4500000,
+        currentValue: 4000000,
+        powerRequirements: '480V, 300A',
+        operatingManualAvailable: true,
+        serviceManualAvailable: true,
+        createdAt: new Date('2022-08-01'),
+        updatedAt: new Date('2024-11-01')
+      },
+      {
+        id: 'EQ-RCH-003',
+        tenantId: 'tenant-4',
+        inventoryNumber: 'RCH-2024-003',
+        name: 'Da Vinci Surgical Robot',
+        type: EquipmentType.THERAPEUTIC,
+        category: EquipmentCategory.SURGICAL_ICU,
+        manufacturer: 'Intuitive Surgical',
+        model: 'da Vinci Xi',
+        serialNumber: 'ROBOT-RCH-2024-C003',
+        location: { id: 'RCH-L3', building: 'Surgery Center', floor: '2', room: 'Robotic OR 1' },
+        department: 'Surgery',
+        status: EquipmentStatus.IN_SERVICE,
+        condition: EquipmentCondition.EXCELLENT,
+        riskLevel: RiskLevel.HIGH,
+        purchaseDate: new Date('2023-06-01'),
+        installationDate: new Date('2023-07-15'),
+        warrantyExpiry: new Date('2028-06-01'),
+        lastMaintenanceDate: new Date('2024-12-15'),
+        nextMaintenanceDate: new Date('2025-03-15'),
+        purchaseCost: 2800000,
+        currentValue: 2600000,
+        powerRequirements: '220V, 50A',
+        operatingManualAvailable: true,
+        serviceManualAvailable: true,
+        createdAt: new Date('2023-06-01'),
+        updatedAt: new Date('2024-12-15')
+      },
+      {
+        id: 'EQ-RCH-004',
+        tenantId: 'tenant-4',
+        inventoryNumber: 'RCH-2024-004',
+        name: 'ECMO System',
+        type: EquipmentType.LIFE_SUPPORT,
+        category: EquipmentCategory.LIFE_SUPPORT,
+        manufacturer: 'Getinge',
+        model: 'Cardiohelp',
+        serialNumber: 'ECMO-RCH-2024-D004',
+        location: { id: 'RCH-L4', building: 'Main Hospital', floor: '4', room: 'Cardiac ICU' },
+        department: 'Intensive Care',
+        status: EquipmentStatus.IN_SERVICE,
+        condition: EquipmentCondition.GOOD,
+        riskLevel: RiskLevel.HIGH,
+        purchaseDate: new Date('2024-02-01'),
+        installationDate: new Date('2024-02-15'),
+        warrantyExpiry: new Date('2027-02-01'),
+        lastMaintenanceDate: new Date('2024-11-20'),
+        nextMaintenanceDate: new Date('2025-02-20'),
+        purchaseCost: 185000,
+        currentValue: 175000,
+        powerRequirements: '220V, 30A',
+        operatingManualAvailable: true,
+        serviceManualAvailable: true,
+        createdAt: new Date('2024-02-01'),
+        updatedAt: new Date('2024-11-20')
+      },
+      {
+        id: 'EQ-RCH-005',
+        tenantId: 'tenant-4',
+        inventoryNumber: 'RCH-2024-005',
+        name: 'PET/CT Scanner',
+        type: EquipmentType.IMAGING,
+        category: EquipmentCategory.MONITORING_SURGICAL_ICU,
+        manufacturer: 'Siemens Healthineers',
+        model: 'Biograph Vision',
+        serialNumber: 'PETCT-RCH-2024-E005',
+        location: { id: 'RCH-L5', building: 'Imaging Center', floor: '1', room: 'Nuclear Medicine' },
+        department: 'Radiology',
+        status: EquipmentStatus.OUT_OF_SERVICE,
+        condition: EquipmentCondition.POOR,
+        riskLevel: RiskLevel.HIGH,
+        purchaseDate: new Date('2021-04-01'),
+        installationDate: new Date('2021-06-01'),
+        warrantyExpiry: new Date('2024-04-01'),
+        lastMaintenanceDate: new Date('2024-10-01'),
+        nextMaintenanceDate: new Date('2025-01-01'),
+        purchaseCost: 3200000,
+        currentValue: 1800000,
+        powerRequirements: '480V, 150A',
+        operatingManualAvailable: true,
+        serviceManualAvailable: true,
+        notes: 'Detector failure - awaiting vendor assessment for repair vs replacement',
+        createdAt: new Date('2021-04-01'),
+        updatedAt: new Date('2024-10-01')
+      },
+      {
+        id: 'EQ-RCH-006',
+        tenantId: 'tenant-4',
+        inventoryNumber: 'RCH-2024-006',
+        name: 'Cardiac Ultrasound',
+        type: EquipmentType.DIAGNOSTIC,
+        category: EquipmentCategory.MONITORING_PHYSIOLOGICAL,
+        manufacturer: 'Philips Healthcare',
+        model: 'EPIQ CVx',
+        serialNumber: 'ECHO-RCH-2024-F006',
+        location: { id: 'RCH-L6', building: 'Heart Center', floor: '2', room: 'Echo Lab 1' },
+        department: 'Cardiology',
+        status: EquipmentStatus.IN_SERVICE,
+        condition: EquipmentCondition.EXCELLENT,
+        riskLevel: RiskLevel.MEDIUM,
+        purchaseDate: new Date('2024-05-01'),
+        installationDate: new Date('2024-05-15'),
+        warrantyExpiry: new Date('2027-05-01'),
+        lastMaintenanceDate: new Date('2024-11-15'),
+        nextMaintenanceDate: new Date('2025-05-15'),
+        purchaseCost: 195000,
+        currentValue: 190000,
+        powerRequirements: '110V, 15A',
+        operatingManualAvailable: true,
+        serviceManualAvailable: true,
+        createdAt: new Date('2024-05-01'),
+        updatedAt: new Date('2024-11-15')
+      },
+      {
+        id: 'EQ-RCH-007',
+        tenantId: 'tenant-4',
+        inventoryNumber: 'RCH-2024-007',
+        name: 'Neonatal Incubator',
+        type: EquipmentType.LIFE_SUPPORT,
+        category: EquipmentCategory.LIFE_SUPPORT,
+        manufacturer: 'Dräger',
+        model: 'Caleo',
+        serialNumber: 'INC-RCH-2024-G007',
+        location: { id: 'RCH-L7', building: 'Main Hospital', floor: '5', room: 'NICU Bay 3' },
+        department: 'Neonatal Care',
+        status: EquipmentStatus.IN_SERVICE,
+        condition: EquipmentCondition.GOOD,
+        riskLevel: RiskLevel.HIGH,
+        purchaseDate: new Date('2023-11-01'),
+        installationDate: new Date('2023-11-15'),
+        warrantyExpiry: new Date('2026-11-01'),
+        lastMaintenanceDate: new Date('2024-08-15'),
+        nextMaintenanceDate: new Date('2025-02-15'),
+        purchaseCost: 42000,
+        currentValue: 38000,
+        powerRequirements: '110V, 15A',
+        operatingManualAvailable: true,
+        serviceManualAvailable: true,
+        createdAt: new Date('2023-11-01'),
+        updatedAt: new Date('2024-08-15')
+      },
+      {
+        id: 'EQ-RCH-008',
+        tenantId: 'tenant-4',
+        inventoryNumber: 'RCH-2024-008',
+        name: 'Chemistry Analyzer',
+        type: EquipmentType.LABORATORY,
+        category: EquipmentCategory.LABORATORY_ANALYTICAL,
+        manufacturer: 'Roche',
+        model: 'cobas 8000',
+        serialNumber: 'CHEM-RCH-2024-H008',
+        location: { id: 'RCH-L8', building: 'Laboratory Building', floor: '1', room: 'Core Lab' },
+        department: 'Laboratory',
+        status: EquipmentStatus.IN_SERVICE,
+        condition: EquipmentCondition.EXCELLENT,
+        riskLevel: RiskLevel.LOW,
+        purchaseDate: new Date('2024-01-15'),
+        installationDate: new Date('2024-02-01'),
+        warrantyExpiry: new Date('2029-01-15'),
+        lastMaintenanceDate: new Date('2024-10-01'),
+        nextMaintenanceDate: new Date('2025-04-01'),
+        purchaseCost: 680000,
+        currentValue: 650000,
+        powerRequirements: '220V, 40A',
+        operatingManualAvailable: true,
+        serviceManualAvailable: true,
+        createdAt: new Date('2024-01-15'),
+        updatedAt: new Date('2024-10-01')
       }
     ];
   }
@@ -363,6 +801,7 @@ export class MockDataService {
     return [
       {
         id: 'INV001',
+        tenantId: 'tenant-1',
         sku: 'CON-ECG-001',
         name: 'ECG Electrodes (Pack of 100)',
         category: InventoryCategory.CONSUMABLES,
@@ -384,6 +823,7 @@ export class MockDataService {
       },
       {
         id: 'INV002',
+        tenantId: 'tenant-1',
         sku: 'CON-SYR-002',
         name: 'Disposable Syringes 10ml (Box of 100)',
         category: InventoryCategory.CONSUMABLES,
@@ -405,6 +845,7 @@ export class MockDataService {
       },
       {
         id: 'INV003',
+        tenantId: 'tenant-1',
         sku: 'SPR-VEN-001',
         name: 'Ventilator Breathing Circuit',
         category: InventoryCategory.SPARE_PARTS,
@@ -424,6 +865,7 @@ export class MockDataService {
       },
       {
         id: 'INV004',
+        tenantId: 'tenant-1',
         sku: 'REA-CBC-001',
         name: 'CBC Reagent Kit',
         category: InventoryCategory.REAGENTS,
@@ -445,6 +887,7 @@ export class MockDataService {
       },
       {
         id: 'INV005',
+        tenantId: 'tenant-1',
         sku: 'CON-GLV-001',
         name: 'Nitrile Gloves Medium (Box of 100)',
         category: InventoryCategory.CONSUMABLES,
@@ -464,6 +907,7 @@ export class MockDataService {
       },
       {
         id: 'INV006',
+        tenantId: 'tenant-1',
         sku: 'SPR-MON-002',
         name: 'SpO2 Sensor Cable',
         category: InventoryCategory.ACCESSORIES,
@@ -483,6 +927,7 @@ export class MockDataService {
       },
       {
         id: 'INV007',
+        tenantId: 'tenant-1',
         sku: 'CON-BLD-001',
         name: 'Blood Collection Tubes (Pack of 100)',
         category: InventoryCategory.CONSUMABLES,
@@ -504,6 +949,7 @@ export class MockDataService {
       },
       {
         id: 'INV008',
+        tenantId: 'tenant-1',
         sku: 'SPR-DEF-001',
         name: 'Defibrillator Pads (Adult)',
         category: InventoryCategory.CONSUMABLES,
@@ -522,6 +968,262 @@ export class MockDataService {
         status: StockStatus.IN_STOCK,
         createdAt: new Date('2024-01-01'),
         updatedAt: new Date('2024-08-15')
+      },
+      // ============ Sunrise Medical Center (tenant-2) Inventory ============
+      {
+        id: 'INV-SMC-001',
+        tenantId: 'tenant-2',
+        sku: 'SMC-CON-001',
+        name: 'CT Contrast Media (Iohexol)',
+        category: InventoryCategory.REAGENTS,
+        type: InventoryType.MEDICAL_SUPPLIES,
+        quantity: 45,
+        minQuantity: 20,
+        maxQuantity: 100,
+        reorderLevel: 30,
+        unitOfMeasure: 'Bottle (350ml)',
+        unitCost: 125,
+        totalValue: 5625,
+        location: 'Radiology Storage R-1',
+        expiryDate: new Date('2026-03-30'),
+        lotNumber: 'SMC-LOT-2024-A001',
+        lastRestockDate: new Date('2024-12-01'),
+        status: StockStatus.IN_STOCK,
+        createdAt: new Date('2024-01-01'),
+        updatedAt: new Date('2024-12-01')
+      },
+      {
+        id: 'INV-SMC-002',
+        tenantId: 'tenant-2',
+        sku: 'SMC-CON-002',
+        name: 'Dialysis Tubing Set',
+        category: InventoryCategory.CONSUMABLES,
+        type: InventoryType.MEDICAL_SUPPLIES,
+        quantity: 18,
+        minQuantity: 25,
+        maxQuantity: 100,
+        reorderLevel: 30,
+        unitOfMeasure: 'Set',
+        unitCost: 85,
+        totalValue: 1530,
+        location: 'Dialysis Storage D-1',
+        expiryDate: new Date('2026-06-30'),
+        lotNumber: 'SMC-LOT-2024-B002',
+        lastRestockDate: new Date('2024-11-01'),
+        status: StockStatus.LOW_STOCK,
+        createdAt: new Date('2024-01-01'),
+        updatedAt: new Date('2024-11-01')
+      },
+      {
+        id: 'INV-SMC-003',
+        tenantId: 'tenant-2',
+        sku: 'SMC-SPR-001',
+        name: 'Surgical Microscope Light Bulb',
+        category: InventoryCategory.SPARE_PARTS,
+        type: InventoryType.MAINTENANCE_PARTS,
+        quantity: 8,
+        minQuantity: 5,
+        maxQuantity: 20,
+        reorderLevel: 6,
+        unitOfMeasure: 'Unit',
+        unitCost: 450,
+        totalValue: 3600,
+        location: 'Parts Storage P-2',
+        lastRestockDate: new Date('2024-09-15'),
+        status: StockStatus.IN_STOCK,
+        createdAt: new Date('2024-01-01'),
+        updatedAt: new Date('2024-09-15')
+      },
+      {
+        id: 'INV-SMC-004',
+        tenantId: 'tenant-2',
+        sku: 'SMC-CON-003',
+        name: 'Mammography Film (Box of 100)',
+        category: InventoryCategory.CONSUMABLES,
+        type: InventoryType.MEDICAL_SUPPLIES,
+        quantity: 0,
+        minQuantity: 10,
+        maxQuantity: 50,
+        reorderLevel: 15,
+        unitOfMeasure: 'Box',
+        unitCost: 280,
+        totalValue: 0,
+        location: 'Women\'s Center Storage W-1',
+        lastRestockDate: new Date('2024-10-01'),
+        status: StockStatus.OUT_OF_STOCK,
+        createdAt: new Date('2024-01-01'),
+        updatedAt: new Date('2025-01-15')
+      },
+      {
+        id: 'INV-SMC-005',
+        tenantId: 'tenant-2',
+        sku: 'SMC-REA-001',
+        name: 'Blood Gas Cartridge',
+        category: InventoryCategory.REAGENTS,
+        type: InventoryType.LABORATORY_SUPPLIES,
+        quantity: 24,
+        minQuantity: 10,
+        maxQuantity: 50,
+        reorderLevel: 15,
+        unitOfMeasure: 'Cartridge',
+        unitCost: 95,
+        totalValue: 2280,
+        location: 'Lab Storage L-1',
+        expiryDate: new Date('2025-08-30'),
+        lotNumber: 'SMC-LOT-2024-C003',
+        lastRestockDate: new Date('2024-12-10'),
+        status: StockStatus.IN_STOCK,
+        createdAt: new Date('2024-01-01'),
+        updatedAt: new Date('2024-12-10')
+      },
+      // ============ Riverside Community Hospital (tenant-4) Inventory ============
+      {
+        id: 'INV-RCH-001',
+        tenantId: 'tenant-4',
+        sku: 'RCH-CON-001',
+        name: 'MRI Contrast Agent (Gadolinium)',
+        category: InventoryCategory.REAGENTS,
+        type: InventoryType.MEDICAL_SUPPLIES,
+        quantity: 85,
+        minQuantity: 30,
+        maxQuantity: 150,
+        reorderLevel: 50,
+        unitOfMeasure: 'Vial (20ml)',
+        unitCost: 180,
+        totalValue: 15300,
+        location: 'MRI Suite Storage M-1',
+        expiryDate: new Date('2026-09-30'),
+        lotNumber: 'RCH-LOT-2024-A001',
+        lastRestockDate: new Date('2024-12-15'),
+        status: StockStatus.IN_STOCK,
+        createdAt: new Date('2024-01-01'),
+        updatedAt: new Date('2024-12-15')
+      },
+      {
+        id: 'INV-RCH-002',
+        tenantId: 'tenant-4',
+        sku: 'RCH-CON-002',
+        name: 'ECMO Oxygenator',
+        category: InventoryCategory.CONSUMABLES,
+        type: InventoryType.MEDICAL_SUPPLIES,
+        quantity: 12,
+        minQuantity: 8,
+        maxQuantity: 30,
+        reorderLevel: 10,
+        unitOfMeasure: 'Unit',
+        unitCost: 2500,
+        totalValue: 30000,
+        location: 'Cardiac ICU Storage C-1',
+        expiryDate: new Date('2025-12-31'),
+        lotNumber: 'RCH-LOT-2024-B002',
+        lastRestockDate: new Date('2024-11-01'),
+        status: StockStatus.IN_STOCK,
+        createdAt: new Date('2024-01-01'),
+        updatedAt: new Date('2024-11-01')
+      },
+      {
+        id: 'INV-RCH-003',
+        tenantId: 'tenant-4',
+        sku: 'RCH-SPR-001',
+        name: 'Da Vinci Instrument Tip Cover',
+        category: InventoryCategory.ACCESSORIES,
+        type: InventoryType.MAINTENANCE_PARTS,
+        quantity: 6,
+        minQuantity: 10,
+        maxQuantity: 40,
+        reorderLevel: 12,
+        unitOfMeasure: 'Set',
+        unitCost: 1200,
+        totalValue: 7200,
+        location: 'Surgery Center Storage S-1',
+        lastRestockDate: new Date('2024-10-15'),
+        status: StockStatus.LOW_STOCK,
+        createdAt: new Date('2024-01-01'),
+        updatedAt: new Date('2024-10-15')
+      },
+      {
+        id: 'INV-RCH-004',
+        tenantId: 'tenant-4',
+        sku: 'RCH-REA-001',
+        name: 'Comprehensive Metabolic Panel Reagent',
+        category: InventoryCategory.REAGENTS,
+        type: InventoryType.LABORATORY_SUPPLIES,
+        quantity: 28,
+        minQuantity: 15,
+        maxQuantity: 60,
+        reorderLevel: 20,
+        unitOfMeasure: 'Kit',
+        unitCost: 520,
+        totalValue: 14560,
+        location: 'Core Lab Storage CL-1',
+        expiryDate: new Date('2025-06-30'),
+        lotNumber: 'RCH-LOT-2024-C003',
+        lastRestockDate: new Date('2024-12-01'),
+        status: StockStatus.IN_STOCK,
+        createdAt: new Date('2024-01-01'),
+        updatedAt: new Date('2024-12-01')
+      },
+      {
+        id: 'INV-RCH-005',
+        tenantId: 'tenant-4',
+        sku: 'RCH-CON-003',
+        name: 'Neonatal Feeding Tubes',
+        category: InventoryCategory.CONSUMABLES,
+        type: InventoryType.MEDICAL_SUPPLIES,
+        quantity: 150,
+        minQuantity: 50,
+        maxQuantity: 300,
+        reorderLevel: 80,
+        unitOfMeasure: 'Pack of 10',
+        unitCost: 35,
+        totalValue: 5250,
+        location: 'NICU Storage N-1',
+        expiryDate: new Date('2027-03-15'),
+        lotNumber: 'RCH-LOT-2024-D004',
+        lastRestockDate: new Date('2024-11-20'),
+        status: StockStatus.IN_STOCK,
+        createdAt: new Date('2024-01-01'),
+        updatedAt: new Date('2024-11-20')
+      },
+      {
+        id: 'INV-RCH-006',
+        tenantId: 'tenant-4',
+        sku: 'RCH-SPR-002',
+        name: 'Linear Accelerator Beam Filter',
+        category: InventoryCategory.SPARE_PARTS,
+        type: InventoryType.MAINTENANCE_PARTS,
+        quantity: 4,
+        minQuantity: 2,
+        maxQuantity: 10,
+        reorderLevel: 3,
+        unitOfMeasure: 'Unit',
+        unitCost: 8500,
+        totalValue: 34000,
+        location: 'Oncology Parts Storage O-1',
+        lastRestockDate: new Date('2024-08-01'),
+        status: StockStatus.IN_STOCK,
+        createdAt: new Date('2024-01-01'),
+        updatedAt: new Date('2024-08-01')
+      },
+      {
+        id: 'INV-RCH-007',
+        tenantId: 'tenant-4',
+        sku: 'RCH-CON-004',
+        name: 'PET Radiotracer (FDG)',
+        category: InventoryCategory.REAGENTS,
+        type: InventoryType.MEDICAL_SUPPLIES,
+        quantity: 0,
+        minQuantity: 5,
+        maxQuantity: 20,
+        reorderLevel: 8,
+        unitOfMeasure: 'Dose',
+        unitCost: 450,
+        totalValue: 0,
+        location: 'Nuclear Medicine Hot Lab',
+        lastRestockDate: new Date('2024-12-20'),
+        status: StockStatus.OUT_OF_STOCK,
+        createdAt: new Date('2024-01-01'),
+        updatedAt: new Date('2025-01-25')
       }
     ];
   }
@@ -530,6 +1232,7 @@ export class MockDataService {
     return [
       {
         id: 'MNT001',
+        tenantId: 'tenant-1',
         equipmentId: 'EQ001',
         type: MaintenanceType.PREVENTIVE,
         status: MaintenanceStatus.COMPLETED,
@@ -545,6 +1248,7 @@ export class MockDataService {
       },
       {
         id: 'MNT002',
+        tenantId: 'tenant-1',
         equipmentId: 'EQ003',
         type: MaintenanceType.CORRECTIVE,
         status: MaintenanceStatus.IN_PROGRESS,
@@ -556,6 +1260,7 @@ export class MockDataService {
       },
       {
         id: 'MNT003',
+        tenantId: 'tenant-1',
         equipmentId: 'EQ002',
         type: MaintenanceType.CALIBRATION,
         status: MaintenanceStatus.SCHEDULED,
@@ -566,6 +1271,7 @@ export class MockDataService {
       },
       {
         id: 'MNT004',
+        tenantId: 'tenant-1',
         equipmentId: 'EQ008',
         type: MaintenanceType.CORRECTIVE,
         status: MaintenanceStatus.OVERDUE,
@@ -577,6 +1283,7 @@ export class MockDataService {
       },
       {
         id: 'MNT005',
+        tenantId: 'tenant-1',
         equipmentId: 'EQ007',
         type: MaintenanceType.SAFETY_INSPECTION,
         status: MaintenanceStatus.COMPLETED,
@@ -589,6 +1296,102 @@ export class MockDataService {
         nextScheduledDate: new Date('2025-12-15'),
         createdAt: new Date('2024-12-01'),
         updatedAt: new Date('2024-12-15')
+      },
+      // ============ Sunrise Medical Center (tenant-2) Maintenance ============
+      {
+        id: 'MNT-SMC-001',
+        tenantId: 'tenant-2',
+        equipmentId: 'EQ-SMC-001',
+        type: MaintenanceType.PREVENTIVE,
+        status: MaintenanceStatus.COMPLETED,
+        scheduledDate: new Date('2024-11-15'),
+        completedDate: new Date('2024-11-15'),
+        technician: 'David Lee',
+        description: 'CT Scanner quarterly tube calibration',
+        findings: 'Tube output within specifications. No issues found.',
+        cost: 1250,
+        nextScheduledDate: new Date('2025-02-15'),
+        createdAt: new Date('2024-11-01'),
+        updatedAt: new Date('2024-11-15')
+      },
+      {
+        id: 'MNT-SMC-002',
+        tenantId: 'tenant-2',
+        equipmentId: 'EQ-SMC-004',
+        type: MaintenanceType.CORRECTIVE,
+        status: MaintenanceStatus.IN_PROGRESS,
+        scheduledDate: new Date('2025-01-20'),
+        technician: 'Ana Garcia',
+        description: 'Dialysis machine pump replacement',
+        createdAt: new Date('2025-01-18'),
+        updatedAt: new Date('2025-01-20')
+      },
+      {
+        id: 'MNT-SMC-003',
+        tenantId: 'tenant-2',
+        equipmentId: 'EQ-SMC-003',
+        type: MaintenanceType.CALIBRATION,
+        status: MaintenanceStatus.SCHEDULED,
+        scheduledDate: new Date('2025-01-15'),
+        description: 'Cath Lab image intensifier calibration',
+        createdAt: new Date('2025-01-01'),
+        updatedAt: new Date('2025-01-01')
+      },
+      // ============ Riverside Community Hospital (tenant-4) Maintenance ============
+      {
+        id: 'MNT-RCH-001',
+        tenantId: 'tenant-4',
+        equipmentId: 'EQ-RCH-001',
+        type: MaintenanceType.PREVENTIVE,
+        status: MaintenanceStatus.COMPLETED,
+        scheduledDate: new Date('2024-12-01'),
+        completedDate: new Date('2024-12-01'),
+        technician: 'Michael Brown',
+        description: 'MRI cryogen level check and magnet calibration',
+        findings: 'Helium levels optimal. Magnet homogeneity excellent.',
+        cost: 3500,
+        nextScheduledDate: new Date('2025-03-01'),
+        createdAt: new Date('2024-11-15'),
+        updatedAt: new Date('2024-12-01')
+      },
+      {
+        id: 'MNT-RCH-002',
+        tenantId: 'tenant-4',
+        equipmentId: 'EQ-RCH-005',
+        type: MaintenanceType.CORRECTIVE,
+        status: MaintenanceStatus.OVERDUE,
+        scheduledDate: new Date('2024-10-15'),
+        description: 'PET/CT detector array repair - critical failure',
+        findings: 'Multiple detector modules non-functional. Vendor assessment pending.',
+        createdAt: new Date('2024-10-01'),
+        updatedAt: new Date('2024-11-15')
+      },
+      {
+        id: 'MNT-RCH-003',
+        tenantId: 'tenant-4',
+        equipmentId: 'EQ-RCH-002',
+        type: MaintenanceType.SAFETY_INSPECTION,
+        status: MaintenanceStatus.COMPLETED,
+        scheduledDate: new Date('2024-11-01'),
+        completedDate: new Date('2024-11-01'),
+        technician: 'Emily Williams',
+        description: 'Linear Accelerator annual radiation safety survey',
+        findings: 'All shielding adequate. Beam alignment within tolerance.',
+        cost: 4500,
+        nextScheduledDate: new Date('2025-11-01'),
+        createdAt: new Date('2024-10-15'),
+        updatedAt: new Date('2024-11-01')
+      },
+      {
+        id: 'MNT-RCH-004',
+        tenantId: 'tenant-4',
+        equipmentId: 'EQ-RCH-003',
+        type: MaintenanceType.PREVENTIVE,
+        status: MaintenanceStatus.SCHEDULED,
+        scheduledDate: new Date('2025-03-15'),
+        description: 'Da Vinci Robot annual service and instrument calibration',
+        createdAt: new Date('2025-01-01'),
+        updatedAt: new Date('2025-01-01')
       }
     ];
   }
@@ -597,6 +1400,7 @@ export class MockDataService {
     return [
       {
         id: 'WO001',
+        tenantId: 'tenant-1',
         workOrderNumber: 'WO-2025-001',
         equipmentId: 'EQ003',
         type: WorkOrderType.REPAIR,
@@ -612,6 +1416,7 @@ export class MockDataService {
       },
       {
         id: 'WO002',
+        tenantId: 'tenant-1',
         workOrderNumber: 'WO-2025-002',
         equipmentId: 'EQ008',
         type: WorkOrderType.REPAIR,
@@ -626,6 +1431,7 @@ export class MockDataService {
       },
       {
         id: 'WO003',
+        tenantId: 'tenant-1',
         workOrderNumber: 'WO-2025-003',
         equipmentId: 'EQ005',
         type: WorkOrderType.MAINTENANCE,
@@ -640,6 +1446,7 @@ export class MockDataService {
       },
       {
         id: 'WO004',
+        tenantId: 'tenant-1',
         workOrderNumber: 'WO-2024-048',
         equipmentId: 'EQ001',
         type: WorkOrderType.MAINTENANCE,
@@ -657,6 +1464,127 @@ export class MockDataService {
         totalCost: 450,
         createdAt: new Date('2024-11-15'),
         updatedAt: new Date('2024-12-01')
+      },
+      // ============ Sunrise Medical Center (tenant-2) Work Orders ============
+      {
+        id: 'WO-SMC-001',
+        tenantId: 'tenant-2',
+        workOrderNumber: 'SMC-WO-2025-001',
+        equipmentId: 'EQ-SMC-004',
+        type: WorkOrderType.REPAIR,
+        priority: WorkOrderPriority.HIGH,
+        status: WorkOrderStatus.IN_PROGRESS,
+        requestedBy: 'Dialysis Unit Charge Nurse',
+        requestedDate: new Date('2025-01-18'),
+        assignedTo: 'Ana Garcia',
+        scheduledDate: new Date('2025-01-20'),
+        description: 'Dialysis pump making unusual noise and flow rate fluctuating',
+        createdAt: new Date('2025-01-18'),
+        updatedAt: new Date('2025-01-20')
+      },
+      {
+        id: 'WO-SMC-002',
+        tenantId: 'tenant-2',
+        workOrderNumber: 'SMC-WO-2025-002',
+        equipmentId: 'EQ-SMC-002',
+        type: WorkOrderType.MAINTENANCE,
+        priority: WorkOrderPriority.MEDIUM,
+        status: WorkOrderStatus.OPEN,
+        requestedBy: 'Biomedical Engineering',
+        requestedDate: new Date('2025-01-15'),
+        scheduledDate: new Date('2025-02-01'),
+        description: 'Scheduled detector calibration for mammography system',
+        createdAt: new Date('2025-01-15'),
+        updatedAt: new Date('2025-01-15')
+      },
+      {
+        id: 'WO-SMC-003',
+        tenantId: 'tenant-2',
+        workOrderNumber: 'SMC-WO-2024-089',
+        equipmentId: 'EQ-SMC-001',
+        type: WorkOrderType.MAINTENANCE,
+        priority: WorkOrderPriority.MEDIUM,
+        status: WorkOrderStatus.COMPLETED,
+        requestedBy: 'Radiology Department',
+        requestedDate: new Date('2024-11-01'),
+        assignedTo: 'David Lee',
+        scheduledDate: new Date('2024-11-15'),
+        completedDate: new Date('2024-11-15'),
+        description: 'CT Scanner quarterly maintenance and tube calibration',
+        resolution: 'All parameters within specification',
+        laborHours: 6,
+        partsCost: 850,
+        totalCost: 1250,
+        createdAt: new Date('2024-11-01'),
+        updatedAt: new Date('2024-11-15')
+      },
+      // ============ Riverside Community Hospital (tenant-4) Work Orders ============
+      {
+        id: 'WO-RCH-001',
+        tenantId: 'tenant-4',
+        workOrderNumber: 'RCH-WO-2025-001',
+        equipmentId: 'EQ-RCH-005',
+        type: WorkOrderType.REPAIR,
+        priority: WorkOrderPriority.CRITICAL,
+        status: WorkOrderStatus.ON_HOLD,
+        requestedBy: 'Nuclear Medicine Director',
+        requestedDate: new Date('2024-10-01'),
+        description: 'PET/CT detector failure - multiple modules non-functional',
+        resolution: 'Awaiting vendor assessment for repair vs replacement decision',
+        createdAt: new Date('2024-10-01'),
+        updatedAt: new Date('2025-01-15')
+      },
+      {
+        id: 'WO-RCH-002',
+        tenantId: 'tenant-4',
+        workOrderNumber: 'RCH-WO-2025-002',
+        equipmentId: 'EQ-RCH-003',
+        type: WorkOrderType.MAINTENANCE,
+        priority: WorkOrderPriority.MEDIUM,
+        status: WorkOrderStatus.OPEN,
+        requestedBy: 'Biomedical Engineering',
+        requestedDate: new Date('2025-01-10'),
+        scheduledDate: new Date('2025-03-15'),
+        description: 'Da Vinci Robot scheduled annual service',
+        createdAt: new Date('2025-01-10'),
+        updatedAt: new Date('2025-01-10')
+      },
+      {
+        id: 'WO-RCH-003',
+        tenantId: 'tenant-4',
+        workOrderNumber: 'RCH-WO-2025-003',
+        equipmentId: 'EQ-RCH-001',
+        type: WorkOrderType.MAINTENANCE,
+        priority: WorkOrderPriority.HIGH,
+        status: WorkOrderStatus.IN_PROGRESS,
+        requestedBy: 'MRI Department',
+        requestedDate: new Date('2025-01-22'),
+        assignedTo: 'Michael Brown',
+        scheduledDate: new Date('2025-01-25'),
+        description: 'MRI coil showing intermittent signal issues',
+        createdAt: new Date('2025-01-22'),
+        updatedAt: new Date('2025-01-25')
+      },
+      {
+        id: 'WO-RCH-004',
+        tenantId: 'tenant-4',
+        workOrderNumber: 'RCH-WO-2024-156',
+        equipmentId: 'EQ-RCH-002',
+        type: WorkOrderType.INSPECTION,
+        priority: WorkOrderPriority.HIGH,
+        status: WorkOrderStatus.COMPLETED,
+        requestedBy: 'Radiation Safety Officer',
+        requestedDate: new Date('2024-10-15'),
+        assignedTo: 'Emily Williams',
+        scheduledDate: new Date('2024-11-01'),
+        completedDate: new Date('2024-11-01'),
+        description: 'Annual radiation safety survey for Linear Accelerator',
+        resolution: 'All safety parameters passed. Certification renewed.',
+        laborHours: 8,
+        partsCost: 0,
+        totalCost: 4500,
+        createdAt: new Date('2024-10-15'),
+        updatedAt: new Date('2024-11-01')
       }
     ];
   }
@@ -665,6 +1593,7 @@ export class MockDataService {
     return [
       {
         id: 'VEN001',
+        tenantId: 'tenant-1',
         name: 'GE Healthcare India',
         contactPerson: 'Rajesh Kumar',
         email: 'rajesh.kumar@gehealthcare.com',
@@ -683,6 +1612,7 @@ export class MockDataService {
       },
       {
         id: 'VEN002',
+        tenantId: 'tenant-1',
         name: 'Philips India Healthcare',
         contactPerson: 'Priya Sharma',
         email: 'priya.sharma@philips.com',
@@ -701,6 +1631,7 @@ export class MockDataService {
       },
       {
         id: 'VEN003',
+        tenantId: 'tenant-1',
         name: 'MedSupply India Pvt Ltd',
         contactPerson: 'Amit Patel',
         email: 'amit.patel@medsupply.in',
@@ -717,6 +1648,7 @@ export class MockDataService {
       },
       {
         id: 'VEN004',
+        tenantId: 'tenant-1',
         name: 'BioTech Solutions',
         contactPerson: 'Dr. Meera Iyer',
         email: 'meera@biotechsolutions.in',
@@ -732,6 +1664,156 @@ export class MockDataService {
         isActive: true,
         createdAt: new Date('2024-01-01'),
         updatedAt: new Date('2024-07-15')
+      },
+      // ============ Sunrise Medical Center (tenant-2) Vendors ============
+      {
+        id: 'VEN-SMC-001',
+        tenantId: 'tenant-2',
+        name: 'Siemens Healthineers West',
+        contactPerson: 'Mark Thompson',
+        email: 'mark.thompson@siemens-healthineers.com',
+        phone: '(858) 555-0100',
+        address: '5755 Oberlin Drive',
+        city: 'San Diego',
+        country: 'USA',
+        category: VendorCategory.EQUIPMENT_MANUFACTURER,
+        rating: 4.7,
+        contractStartDate: new Date('2023-01-01'),
+        contractEndDate: new Date('2026-12-31'),
+        paymentTerms: 'Net 45',
+        isActive: true,
+        createdAt: new Date('2023-01-01'),
+        updatedAt: new Date('2024-08-15')
+      },
+      {
+        id: 'VEN-SMC-002',
+        tenantId: 'tenant-2',
+        name: 'Pacific Medical Supplies',
+        contactPerson: 'Jennifer Wu',
+        email: 'jwu@pacificmedical.com',
+        phone: '(619) 555-0200',
+        address: '1234 Commerce St',
+        city: 'San Diego',
+        country: 'USA',
+        category: VendorCategory.CONSUMABLES_SUPPLIER,
+        rating: 4.3,
+        paymentTerms: 'Net 30',
+        isActive: true,
+        createdAt: new Date('2023-06-01'),
+        updatedAt: new Date('2024-11-01')
+      },
+      {
+        id: 'VEN-SMC-003',
+        tenantId: 'tenant-2',
+        name: 'Fresenius Medical Care',
+        contactPerson: 'Carlos Rodriguez',
+        email: 'carlos.rodriguez@fmc-na.com',
+        phone: '(800) 555-0300',
+        address: '920 Winter Street',
+        city: 'Waltham',
+        country: 'USA',
+        category: VendorCategory.EQUIPMENT_MANUFACTURER,
+        rating: 4.5,
+        contractStartDate: new Date('2022-01-01'),
+        contractEndDate: new Date('2025-12-31'),
+        paymentTerms: 'Net 60',
+        isActive: true,
+        createdAt: new Date('2022-01-01'),
+        updatedAt: new Date('2024-06-15')
+      },
+      // ============ Riverside Community Hospital (tenant-4) Vendors ============
+      {
+        id: 'VEN-RCH-001',
+        tenantId: 'tenant-4',
+        name: 'GE Healthcare Central',
+        contactPerson: 'Robert Anderson',
+        email: 'robert.anderson@gehealthcare.com',
+        phone: '(312) 555-0100',
+        address: '500 W Monroe St',
+        city: 'Chicago',
+        country: 'USA',
+        category: VendorCategory.EQUIPMENT_MANUFACTURER,
+        rating: 4.8,
+        contractStartDate: new Date('2022-01-01'),
+        contractEndDate: new Date('2027-12-31'),
+        paymentTerms: 'Net 45',
+        isActive: true,
+        createdAt: new Date('2022-01-01'),
+        updatedAt: new Date('2024-09-01')
+      },
+      {
+        id: 'VEN-RCH-002',
+        tenantId: 'tenant-4',
+        name: 'Varian Medical Systems',
+        contactPerson: 'Dr. Susan Park',
+        email: 'susan.park@varian.com',
+        phone: '(650) 555-0200',
+        address: '3100 Hansen Way',
+        city: 'Palo Alto',
+        country: 'USA',
+        category: VendorCategory.EQUIPMENT_MANUFACTURER,
+        rating: 4.9,
+        contractStartDate: new Date('2022-06-01'),
+        contractEndDate: new Date('2027-05-31'),
+        paymentTerms: 'Net 60',
+        isActive: true,
+        createdAt: new Date('2022-06-01'),
+        updatedAt: new Date('2024-10-15')
+      },
+      {
+        id: 'VEN-RCH-003',
+        tenantId: 'tenant-4',
+        name: 'Intuitive Surgical',
+        contactPerson: 'Michael Chang',
+        email: 'mchang@intusurg.com',
+        phone: '(408) 555-0300',
+        address: '1020 Kifer Road',
+        city: 'Sunnyvale',
+        country: 'USA',
+        category: VendorCategory.EQUIPMENT_MANUFACTURER,
+        rating: 4.8,
+        contractStartDate: new Date('2023-04-01'),
+        contractEndDate: new Date('2028-03-31'),
+        paymentTerms: 'Net 45',
+        isActive: true,
+        createdAt: new Date('2023-04-01'),
+        updatedAt: new Date('2024-11-20')
+      },
+      {
+        id: 'VEN-RCH-004',
+        tenantId: 'tenant-4',
+        name: 'Midwest Medical Supplies',
+        contactPerson: 'Karen Miller',
+        email: 'kmiller@midwestmedical.com',
+        phone: '(312) 555-0400',
+        address: '2500 Industrial Blvd',
+        city: 'Chicago',
+        country: 'USA',
+        category: VendorCategory.CONSUMABLES_SUPPLIER,
+        rating: 4.4,
+        paymentTerms: 'Net 30',
+        isActive: true,
+        createdAt: new Date('2022-09-01'),
+        updatedAt: new Date('2024-12-01')
+      },
+      {
+        id: 'VEN-RCH-005',
+        tenantId: 'tenant-4',
+        name: 'Roche Diagnostics Midwest',
+        contactPerson: 'David Kim',
+        email: 'david.kim@roche.com',
+        phone: '(317) 555-0500',
+        address: '9115 Hague Road',
+        city: 'Indianapolis',
+        country: 'USA',
+        category: VendorCategory.EQUIPMENT_MANUFACTURER,
+        rating: 4.6,
+        contractStartDate: new Date('2023-10-01'),
+        contractEndDate: new Date('2028-09-30'),
+        paymentTerms: 'Net 45',
+        isActive: true,
+        createdAt: new Date('2023-10-01'),
+        updatedAt: new Date('2024-10-01')
       }
     ];
   }
@@ -740,6 +1822,7 @@ export class MockDataService {
     return [
       {
         id: 'ALT001',
+        tenantId: 'tenant-1',
         type: AlertType.LOW_STOCK,
         severity: AlertSeverity.HIGH,
         title: 'Low Stock Alert',
@@ -752,6 +1835,7 @@ export class MockDataService {
       },
       {
         id: 'ALT002',
+        tenantId: 'tenant-1',
         type: AlertType.LOW_STOCK,
         severity: AlertSeverity.CRITICAL,
         title: 'Out of Stock',
@@ -764,6 +1848,7 @@ export class MockDataService {
       },
       {
         id: 'ALT003',
+        tenantId: 'tenant-1',
         type: AlertType.MAINTENANCE_OVERDUE,
         severity: AlertSeverity.HIGH,
         title: 'Maintenance Overdue',
@@ -776,6 +1861,7 @@ export class MockDataService {
       },
       {
         id: 'ALT004',
+        tenantId: 'tenant-1',
         type: AlertType.MAINTENANCE_DUE,
         severity: AlertSeverity.MEDIUM,
         title: 'Upcoming Maintenance',
@@ -788,6 +1874,7 @@ export class MockDataService {
       },
       {
         id: 'ALT005',
+        tenantId: 'tenant-1',
         type: AlertType.WARRANTY_EXPIRING,
         severity: AlertSeverity.MEDIUM,
         title: 'Warranty Expiring',
@@ -800,6 +1887,7 @@ export class MockDataService {
       },
       {
         id: 'ALT006',
+        tenantId: 'tenant-1',
         type: AlertType.EXPIRY_WARNING,
         severity: AlertSeverity.MEDIUM,
         title: 'Reagent Expiring Soon',
@@ -809,6 +1897,138 @@ export class MockDataService {
         isRead: false,
         isAcknowledged: false,
         createdAt: new Date('2025-01-19')
+      },
+      // ============ Sunrise Medical Center (tenant-2) Alerts ============
+      {
+        id: 'ALT-SMC-001',
+        tenantId: 'tenant-2',
+        type: AlertType.LOW_STOCK,
+        severity: AlertSeverity.HIGH,
+        title: 'Low Stock Alert',
+        message: 'Dialysis Tubing Set stock is below reorder level (18 units)',
+        relatedItemId: 'INV-SMC-002',
+        relatedItemType: 'inventory',
+        isRead: false,
+        isAcknowledged: false,
+        createdAt: new Date('2025-01-18')
+      },
+      {
+        id: 'ALT-SMC-002',
+        tenantId: 'tenant-2',
+        type: AlertType.LOW_STOCK,
+        severity: AlertSeverity.CRITICAL,
+        title: 'Out of Stock',
+        message: 'Mammography Film is out of stock! Women\'s imaging services may be impacted.',
+        relatedItemId: 'INV-SMC-004',
+        relatedItemType: 'inventory',
+        isRead: false,
+        isAcknowledged: false,
+        createdAt: new Date('2025-01-15')
+      },
+      {
+        id: 'ALT-SMC-003',
+        tenantId: 'tenant-2',
+        type: AlertType.EQUIPMENT_FAILURE,
+        severity: AlertSeverity.HIGH,
+        title: 'Equipment Under Maintenance',
+        message: 'Dialysis Machine (SMC-2024-004) is under maintenance. Expected completion: 2 days.',
+        relatedItemId: 'EQ-SMC-004',
+        relatedItemType: 'equipment',
+        isRead: true,
+        isAcknowledged: true,
+        createdAt: new Date('2025-01-20')
+      },
+      {
+        id: 'ALT-SMC-004',
+        tenantId: 'tenant-2',
+        type: AlertType.MAINTENANCE_DUE,
+        severity: AlertSeverity.MEDIUM,
+        title: 'Upcoming Maintenance',
+        message: 'Cardiac Cath Lab (SMC-2024-003) calibration due on January 15, 2025',
+        relatedItemId: 'EQ-SMC-003',
+        relatedItemType: 'equipment',
+        isRead: false,
+        isAcknowledged: false,
+        createdAt: new Date('2025-01-10')
+      },
+      // ============ Riverside Community Hospital (tenant-4) Alerts ============
+      {
+        id: 'ALT-RCH-001',
+        tenantId: 'tenant-4',
+        type: AlertType.EQUIPMENT_FAILURE,
+        severity: AlertSeverity.CRITICAL,
+        title: 'Critical Equipment Failure',
+        message: 'PET/CT Scanner (RCH-2024-005) is non-functional. Nuclear medicine studies redirected.',
+        relatedItemId: 'EQ-RCH-005',
+        relatedItemType: 'equipment',
+        isRead: true,
+        isAcknowledged: true,
+        createdAt: new Date('2024-10-01')
+      },
+      {
+        id: 'ALT-RCH-002',
+        tenantId: 'tenant-4',
+        type: AlertType.LOW_STOCK,
+        severity: AlertSeverity.HIGH,
+        title: 'Low Stock Alert',
+        message: 'Da Vinci Instrument Tip Covers below reorder level (6 units). Surgical schedule may be affected.',
+        relatedItemId: 'INV-RCH-003',
+        relatedItemType: 'inventory',
+        isRead: false,
+        isAcknowledged: false,
+        createdAt: new Date('2025-01-20')
+      },
+      {
+        id: 'ALT-RCH-003',
+        tenantId: 'tenant-4',
+        type: AlertType.LOW_STOCK,
+        severity: AlertSeverity.CRITICAL,
+        title: 'Out of Stock',
+        message: 'PET Radiotracer (FDG) is out of stock. Note: PET scanner currently non-operational.',
+        relatedItemId: 'INV-RCH-007',
+        relatedItemType: 'inventory',
+        isRead: true,
+        isAcknowledged: true,
+        createdAt: new Date('2025-01-25')
+      },
+      {
+        id: 'ALT-RCH-004',
+        tenantId: 'tenant-4',
+        type: AlertType.WARRANTY_EXPIRING,
+        severity: AlertSeverity.MEDIUM,
+        title: 'Warranty Expiring',
+        message: 'ECMO System (RCH-2024-004) warranty expires on February 1, 2027',
+        relatedItemId: 'EQ-RCH-004',
+        relatedItemType: 'equipment',
+        isRead: false,
+        isAcknowledged: false,
+        createdAt: new Date('2025-01-22')
+      },
+      {
+        id: 'ALT-RCH-005',
+        tenantId: 'tenant-4',
+        type: AlertType.MAINTENANCE_OVERDUE,
+        severity: AlertSeverity.HIGH,
+        title: 'Maintenance Overdue',
+        message: 'PET/CT Scanner (RCH-2024-005) maintenance is overdue. Equipment currently non-functional.',
+        relatedItemId: 'EQ-RCH-005',
+        relatedItemType: 'equipment',
+        isRead: true,
+        isAcknowledged: false,
+        createdAt: new Date('2024-10-15')
+      },
+      {
+        id: 'ALT-RCH-006',
+        tenantId: 'tenant-4',
+        type: AlertType.EXPIRY_WARNING,
+        severity: AlertSeverity.MEDIUM,
+        title: 'Reagent Expiring Soon',
+        message: 'Comprehensive Metabolic Panel Reagent expires on June 30, 2025 (28 kits in stock)',
+        relatedItemId: 'INV-RCH-004',
+        relatedItemType: 'inventory',
+        isRead: false,
+        isAcknowledged: false,
+        createdAt: new Date('2025-01-15')
       }
     ];
   }
@@ -844,6 +2064,46 @@ export class MockDataService {
   
   getAuditLogById(id: string): AuditLog | undefined {
     return this._auditLogs().find(a => a.id === id);
+  }
+
+  // Tenant filtering methods
+  // These methods filter data by tenant ID for multi-tenancy support
+
+  getEquipmentByTenant(tenantId: string): Equipment[] {
+    return this._equipment().filter(e => e.tenantId === tenantId);
+  }
+
+  getInventoryByTenant(tenantId: string): InventoryItem[] {
+    return this._inventory().filter(i => i.tenantId === tenantId);
+  }
+
+  getVendorsByTenant(tenantId: string): Vendor[] {
+    return this._vendors().filter(v => v.tenantId === tenantId);
+  }
+
+  getMaintenanceRecordsByTenant(tenantId: string): MaintenanceRecord[] {
+    return this._maintenanceRecords().filter(m => m.tenantId === tenantId);
+  }
+
+  getWorkOrdersByTenant(tenantId: string): WorkOrder[] {
+    return this._workOrders().filter(w => w.tenantId === tenantId);
+  }
+
+  getAlertsByTenant(tenantId: string): Alert[] {
+    return this._alerts().filter(a => a.tenantId === tenantId);
+  }
+
+  getAuditLogsByTenant(tenantId: string): AuditLog[] {
+    return this._auditLogs();
+  }
+
+  getDashboardStatsByTenant(tenantId: string): DashboardStats {
+    // Temporarily set tenant to get filtered stats
+    const currentTenant = this.currentTenantId();
+    this.currentTenantId.set(tenantId);
+    const stats = this.dashboardStats();
+    this.currentTenantId.set(currentTenant);
+    return stats;
   }
   
   private generateAuditLogData(): AuditLog[] {

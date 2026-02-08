@@ -10,6 +10,8 @@ import { AvatarModule } from 'primeng/avatar';
 import { AuthService } from '@core/services/auth.service';
 import { ThemeService } from '@core/services/theme.service';
 import { MockDataService } from '@core/services/mock-data.service';
+import { TenantService } from '@core/services/tenant.service';
+import { TenantSwitcherComponent } from '@features/tenant/components/tenant-switcher/tenant-switcher.component';
 
 interface NavItem {
   label: string;
@@ -31,7 +33,8 @@ interface NavItem {
     BadgeModule,
     MenuModule,
     RippleModule,
-    AvatarModule
+    AvatarModule,
+    TenantSwitcherComponent
   ],
   template: `
     <div class="layout-container" [class.sidebar-collapsed]="sidebarCollapsed()">
@@ -39,23 +42,23 @@ interface NavItem {
       <aside class="sidebar">
         <!-- Logo -->
         <div class="sidebar-header">
-          <div class="logo" [routerLink]="['/dashboard']">
-            <div class="logo-icon">
-              <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="2" y="2" width="32" height="32" rx="6" fill="currentColor" fill-opacity="0.15"/>
-                <path d="M18 8V28" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
-                <path d="M8 18H28" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
-                <path d="M10 21C10 21 13 15 18 15C23 15 26 21 26 21" stroke="#4ADE80" stroke-width="2.5" stroke-linecap="round"/>
-              </svg>
-            </div>
-            @if (!sidebarCollapsed()) {
+          @if (!sidebarCollapsed()) {
+            <div class="logo" [routerLink]="['/dashboard']">
+              <div class="logo-icon">
+                <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="2" y="2" width="32" height="32" rx="6" fill="currentColor" fill-opacity="0.15"/>
+                  <path d="M18 8V28" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                  <path d="M8 18H28" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                  <path d="M10 21C10 21 13 15 18 15C23 15 26 21 26 21" stroke="#4ADE80" stroke-width="2.5" stroke-linecap="round"/>
+                </svg>
+              </div>
               <div class="logo-text">
                 <span class="logo-title">GoEMR</span>
                 <span class="logo-subtitle">Inventory</span>
               </div>
-            }
-          </div>
-          <button 
+            </div>
+          }
+          <button
             class="collapse-btn"
             (click)="toggleSidebar()"
             [pTooltip]="sidebarCollapsed() ? 'Expand Sidebar' : 'Collapse Sidebar'"
@@ -73,7 +76,7 @@ interface NavItem {
                 <a 
                   [routerLink]="item.route"
                   routerLinkActive="active"
-                  [routerLinkActiveOptions]="{ exact: item.route === '/dashboard' }"
+                  [routerLinkActiveOptions]="{ exact: item.route === '/dashboard' || item.route === '/vendors' }"
                   class="nav-link"
                   [pTooltip]="sidebarCollapsed() ? item.label : ''"
                   tooltipPosition="right"
@@ -152,8 +155,11 @@ interface NavItem {
           </div>
           
           <div class="header-right">
+            <!-- Tenant Switcher -->
+            <app-tenant-switcher></app-tenant-switcher>
+
             <!-- Theme Toggle -->
-            <button 
+            <button
               class="header-btn"
               (click)="toggleTheme()"
               [pTooltip]="themeService.isDarkMode() ? 'Light Mode' : 'Dark Mode'"
@@ -293,15 +299,15 @@ interface NavItem {
       &:hover {
         background: var(--bg-hover);
         border-color: var(--primary-500);
-        
+
         i {
           color: var(--primary-600);
         }
       }
     }
 
-    .sidebar-collapsed .collapse-btn {
-      display: none;
+    .sidebar-collapsed .sidebar-header {
+      justify-content: center;
     }
 
     /* Navigation */
@@ -474,6 +480,8 @@ interface NavItem {
       display: flex;
       flex-direction: column;
       min-height: 100vh;
+      min-width: 0;
+      overflow-x: hidden;
       transition: margin-left var(--transition-base);
     }
 
@@ -687,17 +695,35 @@ export class MainLayoutComponent {
   authService = inject(AuthService);
   themeService = inject(ThemeService);
   mockDataService = inject(MockDataService);
+  tenantService = inject(TenantService);
 
   sidebarCollapsed = signal(false);
   mobileSidebarOpen = signal(false);
 
   navItems: NavItem[] = [
     { label: 'Dashboard', icon: 'pi-home', route: '/dashboard' },
+    { label: 'Help Desk', icon: 'pi-ticket', route: '/helpdesk' },
+    { label: 'Depreciation', icon: 'pi-chart-line', route: '/depreciation' },
     { label: 'Equipment', icon: 'pi-box', route: '/equipment' },
     { label: 'Inventory', icon: 'pi-database', route: '/inventory' },
+    { label: 'Lot Barcodes', icon: 'pi-qrcode', route: '/lot-barcodes' },
+    { label: 'Discards', icon: 'pi-trash', route: '/discards' },
+    { label: 'Checkouts', icon: 'pi-sign-out', route: '/checkouts' },
+    { label: 'Shipments', icon: 'pi-truck', route: '/shipments' },
+    { label: 'Returns', icon: 'pi-replay', route: '/returns' },
+    { label: 'Pick Lists', icon: 'pi-list-check', route: '/pick-lists' },
+    { label: 'Kits', icon: 'pi-objects-column', route: '/kits' },
+    { label: 'Purchase Orders', icon: 'pi-shopping-cart', route: '/purchase-orders' },
+    { label: 'Scanning', icon: 'pi-barcode', route: '/scanning' },
+    { label: 'Labels', icon: 'pi-tag', route: '/labels' },
+    { label: 'Alerts', icon: 'pi-bell', route: '/alerts' },
+    { label: 'Tags', icon: 'pi-hashtag', route: '/tags' },
     { label: 'Maintenance', icon: 'pi-wrench', route: '/maintenance' },
     { label: 'Vendors', icon: 'pi-building', route: '/vendors' },
+    { label: 'Vendor Performance', icon: 'pi-chart-line', route: '/vendors/performance' },
+    { label: 'Import/Export', icon: 'pi-upload', route: '/import-export' },
     { label: 'Reports', icon: 'pi-chart-bar', route: '/reports' },
+    { label: 'Integrations', icon: 'pi-link', route: '/integrations' },
     { label: 'Compliance', icon: 'pi-shield', route: '/compliance' },
     { label: 'Audit Trail', icon: 'pi-history', route: '/audit-trail' }
   ];

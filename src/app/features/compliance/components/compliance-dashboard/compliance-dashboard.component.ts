@@ -712,7 +712,24 @@ import {
           <!-- Data Requests Tab -->
           <p-tabpanel value="requests">
             <div class="requests-section">
-              <p-table [value]="complianceService.dataRequests()" [paginator]="true" [rows]="10"
+              <div class="requests-toolbar">
+                <div class="toolbar-filters">
+                  <p-select
+                    [options]="requestTypeOptions"
+                    [(ngModel)]="selectedRequestType"
+                    placeholder="All Types"
+                    [showClear]="true">
+                  </p-select>
+                  <p-select
+                    [options]="requestStatusOptions"
+                    [(ngModel)]="selectedRequestStatus"
+                    placeholder="All Statuses"
+                    [showClear]="true">
+                  </p-select>
+                </div>
+                <button pButton icon="pi pi-plus" label="New Request" class="p-button-primary"></button>
+              </div>
+              <p-table [value]="filteredRequests()" [paginator]="true" [rows]="10"
                        styleClass="p-datatable-sm">
                 <ng-template pTemplate="header">
                   <tr>
@@ -1701,9 +1718,19 @@ import {
     }
 
     .audit-filters,
-    .tasks-filters {
+    .tasks-filters,
+    .toolbar-filters {
       display: flex;
       gap: var(--space-3);
+      flex-wrap: wrap;
+    }
+
+    .requests-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-4);
+      margin-bottom: var(--space-4);
       flex-wrap: wrap;
     }
 
@@ -2011,6 +2038,8 @@ export class ComplianceDashboardComponent implements OnInit {
   selectedRisk: string | null = null;
   selectedFramework: string | null = null;
   selectedTaskStatus: string | null = null;
+  selectedRequestType: string | null = null;
+  selectedRequestStatus: string | null = null;
 
   // Chart data
   radarChartData: any;
@@ -2058,6 +2087,22 @@ export class ComplianceDashboardComponent implements OnInit {
     { label: 'In Progress', value: 'In Progress' },
     { label: 'Completed', value: 'Completed' },
     { label: 'Overdue', value: 'Overdue' }
+  ];
+
+  requestTypeOptions = [
+    { label: 'Access', value: 'Access' },
+    { label: 'Rectification', value: 'Rectification' },
+    { label: 'Erasure', value: 'Erasure' },
+    { label: 'Portability', value: 'Portability' },
+    { label: 'Restriction', value: 'Restriction' },
+    { label: 'Objection', value: 'Objection' }
+  ];
+
+  requestStatusOptions = [
+    { label: 'Pending', value: 'Pending' },
+    { label: 'In Progress', value: 'In Progress' },
+    { label: 'Completed', value: 'Completed' },
+    { label: 'Rejected', value: 'Rejected' }
   ];
 
   dataSubjectRightsList: { key: keyof DataSubjectRights; label: string }[] = [
@@ -2144,6 +2189,19 @@ export class ComplianceDashboardComponent implements OnInit {
     }
 
     return tasks;
+  });
+
+  filteredRequests = computed(() => {
+    let requests = this.complianceService.dataRequests();
+
+    if (this.selectedRequestType) {
+      requests = requests.filter(r => r.requestType === this.selectedRequestType);
+    }
+    if (this.selectedRequestStatus) {
+      requests = requests.filter(r => r.status === this.selectedRequestStatus);
+    }
+
+    return requests;
   });
 
   ngOnInit(): void {
